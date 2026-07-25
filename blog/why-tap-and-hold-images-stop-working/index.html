@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Why tap-and-hold images stop working — Tap Me Studio</title>
+    <meta name="description" content="Five reasons the reveal fails, in the order you should check them.">
+    <link rel="canonical" href="https://tapmestudio.com/blog/why-tap-and-hold-images-stop-working/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/blog/why-tap-and-hold-images-stop-working/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/blog/why-tap-and-hold-images-stop-working/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/blog/why-tap-and-hold-images-stop-working/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="Why tap-and-hold images stop working">
+    <meta property="og:description" content="Five reasons the reveal fails, in the order you should check them.">
+    <meta property="og:url" content="https://tapmestudio.com/blog/why-tap-and-hold-images-stop-working/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../site.css?v=1">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Why tap-and-hold images stop working","datePublished":"2026-07-22","dateModified":"2026-07-22","description":"Five reasons the reveal fails, in the order you should check them.","mainEntityOfPage":"https://tapmestudio.com/blog/why-tap-and-hold-images-stop-working/","author":{"@type":"Organization","name":"Tap Me Studio"}}</script>
+  </head>
+  <body data-locale="en" data-other-locale="ja" data-other-url="/ja/blog/why-tap-and-hold-images-stop-working/">
+    <a class="skip-link" href="#main">Skip to the editor</a>
+    <header class="site-header">
+      <a class="brand" href="../../">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="../../">Maker</a>
+        <a href="../../how-to/">How-to</a>
+        <a href="../../faq/">FAQ</a>
+        <a href="../../blog/" aria-current="page">Blog</a>
+        <a href="../../about/">About</a>
+      </nav>
+      <a class="lang-switch" href="../../ja/blog/why-tap-and-hold-images-stop-working/" hreflang="ja" lang="ja">日本語</a>
+    </header>
+    <main id="main">
+      <article class="prose">
+        <header class="page-head">
+          <p class="page-meta"><time datetime="2026-07-22">2026-07-22</time></p>
+          <h1>Why tap-and-hold images stop working</h1>
+        </header>
+        
+        <p>A tap-and-hold image that doesn't change is almost never a problem with how it was made. It is a problem with what X did to it afterwards. Here are the causes, roughly in order of how often they come up.</p>
+        <h2>The file is over 5 MB</h2>
+        <p>This is the big one. Past roughly five megabytes, X stops serving your original and hands the compressed copy to both views. Both states then look identical, which reads as &quot;the effect doesn't work&quot; even though the file is fine.</p>
+        <p>Fix it by exporting at a smaller size. Dropping from 2432 px to 1946 px usually cuts the file by a third with no visible loss, because the effect lives in the pixel pattern rather than in resolution.</p>
+        <h2>The upload path re-encoded it</h2>
+        <p>Some third-party clients and scheduling tools convert images to JPEG before upload. JPEG has no alpha channel, so the transparency the effect depends on is gone before X ever sees the file. Post from the official app or the web uploader.</p>
+        
+        <h2>The viewer is on the wrong client</h2>
+        <p>Making the image is platform-independent. Seeing it is not. The official iOS app reliably fetches the original on a long press. Android has been inconsistent, and the web client often shows the compressed copy in both states. If it works for you and not for a friend, this is usually why.</p>
+        <h2>The picture was a bad candidate</h2>
+        <p>Very dark images have little room to hide, because the dither has to average toward a light background and a dark picture simply doesn't get there. Very flat images have the opposite problem: nothing survives the reveal. High-contrast art with clear shapes works best.</p>
+        <h2>X changed something</h2>
+        <p>This whole category depends on undocumented behaviour. Compression settings, size thresholds and the long-press gesture itself have all shifted before, and will again. When a technique that worked last month stops working for everyone at once, this is why.</p>
+        <p class="section-more"><a href="../../blog/">← Blog</a></p>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>Product</h2>
+          <a href="../../">Maker</a>
+          <a href="../../how-to/">How-to</a>
+          <a href="../../faq/">FAQ</a>
+          <a href="../../blog/">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h2>Company</h2>
+          <a href="../../about/">About</a>
+          <a href="../../privacy/">Privacy</a>
+          <a href="../../terms/">Terms</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookies</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>Contact</h2>
+          <p>Questions, bugs, or a picture that won't cooperate:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">Made for the tap-and-hold trend on X. Not affiliated with X Corp.</p>
+    </footer>
+
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookies</h2>
+        <p>We'd like to use cookies for traffic statistics and advertising. The image editor works either way, and your pictures never leave your device. <a href="../../privacy/">Privacy policy</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">Reject non-essential</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">Accept</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="../../site.js?v=1" defer></script>
+  </body>
+</html>

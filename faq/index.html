@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frequently asked questions — Tap Me Studio</title>
+    <meta name="description" content="Why a tap-and-hold image sometimes doesn't change, what X does to your file, and how this maker handles it.">
+    <link rel="canonical" href="https://tapmestudio.com/faq/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/faq/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/faq/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/faq/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="Frequently asked questions">
+    <meta property="og:description" content="Why a tap-and-hold image sometimes doesn't change, what X does to your file, and how this maker handles it.">
+    <meta property="og:url" content="https://tapmestudio.com/faq/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../site.css?v=1">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why doesn't my image change when I tap and hold?","acceptedAnswer":{"@type":"Answer","text":"The reveal only works when X serves the original PNG instead of its compressed copy. That fails for three common reasons: the file is over 5 MB, the long side is far beyond 2432 px, or the app re-encoded it because it was uploaded from a client that strips transparency. Export again at a smaller size and check the file size the editor reports before posting."}},{"@type":"Question","name":"Is this really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. No account, no watermark, no export limit, no paid tier. The site carries advertising, which is what pays for the domain and hosting."}},{"@type":"Question","name":"Are my pictures uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The file is read into a canvas element in your own browser and every pixel operation happens there. There is no upload endpoint in this app — you can watch the network tab while you work and see nothing leave."}},{"@type":"Question","name":"Does it work on Android and on desktop?","acceptedAnswer":{"@type":"Answer","text":"Making one works in any modern browser, on a phone or a computer. Viewing the effect is a different matter: it depends on the X client. The official iOS app is the most reliable. Android and the web client sometimes show the compressed copy in both states, which means no change."}},{"@type":"Question","name":"What is the difference between the two modes?","acceptedAnswer":{"@type":"Answer","text":"Hide & reveal takes one picture and dithers it so that shrinking it averages the image into the background — it looks blank in the feed and returns when opened. Two-image swap takes two pictures and solves the per-pixel transparency so the file reads as the first picture over a light background and the second over a dark one."}},{"@type":"Question","name":"Why does my two-image swap look washed out?","acceptedAnswer":{"@type":"Answer","text":"That is a hard limit of the technique, not a bug. Composited over white and over black, the same file can only differ by one brightness value per pixel — so two arbitrary colour images are impossible. Pick a light first picture and a dark second one, and the result gets much closer."}},{"@type":"Question","name":"Can I use it for commercial work?","acceptedAnswer":{"@type":"Answer","text":"Yes. The images you make are yours. This tool claims no rights over anything you create with it."}},{"@type":"Question","name":"Will it keep working?","acceptedAnswer":{"@type":"Answer","text":"Nobody can promise that. X changes its image pipeline without notice, and every tool in this category breaks when it does. Test a post from a private account before you rely on one."}}]}</script>
+  </head>
+  <body data-locale="en" data-other-locale="ja" data-other-url="/ja/faq/">
+    <a class="skip-link" href="#main">Skip to the editor</a>
+    <header class="site-header">
+      <a class="brand" href="../">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="../">Maker</a>
+        <a href="../how-to/">How-to</a>
+        <a href="../faq/" aria-current="page">FAQ</a>
+        <a href="../blog/">Blog</a>
+        <a href="../about/">About</a>
+      </nav>
+      <a class="lang-switch" href="../ja/faq/" hreflang="ja" lang="ja">日本語</a>
+    </header>
+    <main id="main">
+      <article class="prose">
+        
+      <header class="page-head">
+        <h1>Frequently asked questions</h1>
+        
+      </header>
+        <p class="lede">Most problems have the same cause: X served the compressed copy instead of your original file. These answers cover why that happens and what to do about it.</p>
+        <div class="qa-list">
+          <details class="qa" open>
+            <summary>Why doesn't my image change when I tap and hold?</summary>
+            <p>The reveal only works when X serves the original PNG instead of its compressed copy. That fails for three common reasons: the file is over 5 MB, the long side is far beyond 2432 px, or the app re-encoded it because it was uploaded from a client that strips transparency. Export again at a smaller size and check the file size the editor reports before posting.</p>
+          </details>
+          <details class="qa">
+            <summary>Is this really free?</summary>
+            <p>Yes. No account, no watermark, no export limit, no paid tier. The site carries advertising, which is what pays for the domain and hosting.</p>
+          </details>
+          <details class="qa">
+            <summary>Are my pictures uploaded anywhere?</summary>
+            <p>No. The file is read into a canvas element in your own browser and every pixel operation happens there. There is no upload endpoint in this app — you can watch the network tab while you work and see nothing leave.</p>
+          </details>
+          <details class="qa">
+            <summary>Does it work on Android and on desktop?</summary>
+            <p>Making one works in any modern browser, on a phone or a computer. Viewing the effect is a different matter: it depends on the X client. The official iOS app is the most reliable. Android and the web client sometimes show the compressed copy in both states, which means no change.</p>
+          </details>
+          
+          <details class="qa">
+            <summary>What is the difference between the two modes?</summary>
+            <p>Hide &amp; reveal takes one picture and dithers it so that shrinking it averages the image into the background — it looks blank in the feed and returns when opened. Two-image swap takes two pictures and solves the per-pixel transparency so the file reads as the first picture over a light background and the second over a dark one.</p>
+          </details>
+          <details class="qa">
+            <summary>Why does my two-image swap look washed out?</summary>
+            <p>That is a hard limit of the technique, not a bug. Composited over white and over black, the same file can only differ by one brightness value per pixel — so two arbitrary colour images are impossible. Pick a light first picture and a dark second one, and the result gets much closer.</p>
+          </details>
+          <details class="qa">
+            <summary>Can I use it for commercial work?</summary>
+            <p>Yes. The images you make are yours. This tool claims no rights over anything you create with it.</p>
+          </details>
+          <details class="qa">
+            <summary>Will it keep working?</summary>
+            <p>Nobody can promise that. X changes its image pipeline without notice, and every tool in this category breaks when it does. Test a post from a private account before you rely on one.</p>
+          </details>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>Product</h2>
+          <a href="../">Maker</a>
+          <a href="../how-to/">How-to</a>
+          <a href="../faq/">FAQ</a>
+          <a href="../blog/">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h2>Company</h2>
+          <a href="../about/">About</a>
+          <a href="../privacy/">Privacy</a>
+          <a href="../terms/">Terms</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookies</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>Contact</h2>
+          <p>Questions, bugs, or a picture that won't cooperate:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">Made for the tap-and-hold trend on X. Not affiliated with X Corp.</p>
+    </footer>
+
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookies</h2>
+        <p>We'd like to use cookies for traffic statistics and advertising. The image editor works either way, and your pictures never leave your device. <a href="../privacy/">Privacy policy</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">Reject non-essential</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">Accept</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="../site.js?v=1" defer></script>
+  </body>
+</html>

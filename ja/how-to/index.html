@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>X で「長押しで変化」する画像の作り方 — Tap Me Studio</title>
+    <meta name="description" content="X のタイムラインでは隠れていて、長押しすると現れる画像を作る手順を解説します。">
+    <link rel="canonical" href="https://tapmestudio.com/ja/how-to/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/how-to/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/how-to/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/how-to/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="X で「長押しで変化」する画像の作り方">
+    <meta property="og:description" content="X のタイムラインでは隠れていて、長押しすると現れる画像を作る手順を解説します。">
+    <meta property="og:url" content="https://tapmestudio.com/ja/how-to/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../site.css?v=1">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"X で「長押しで変化」する画像の作り方","description":"X のタイムラインでは隠れていて、長押しすると現れる画像を作る手順を解説します。","step":[{"@type":"HowToStep","position":1,"name":"画像をアップロード","text":"PNG または JPG をドロップします。ブラウザ内で処理され、サーバーには送信されません。"},{"@type":"HowToStep","position":2,"name":"見せる部分を選ぶ","text":"全体を隠す、暗い部分を残す、サムネイルに残す範囲を手描きで塗る、の 3 通りから選べます。"},{"@type":"HowToStep","position":3,"name":"保存して投稿","text":"PNG を保存して X の投稿に添付します。5 MB を超えると X が圧縮版を配信するため、変化しません。"}]}</script>
+  </head>
+  <body data-locale="ja" data-other-locale="en" data-other-url="/how-to/">
+    <a class="skip-link" href="#main">エディターへ移動</a>
+    <header class="site-header">
+      <a class="brand" href="../../ja/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="../../ja/">作成</a>
+        <a href="../../ja/how-to/" aria-current="page">使い方</a>
+        <a href="../../ja/faq/">よくある質問</a>
+        <a href="../../ja/blog/">ブログ</a>
+        <a href="../../ja/about/">運営者</a>
+      </nav>
+      <a class="lang-switch" href="../../how-to/" hreflang="en" lang="en">English</a>
+    </header>
+    <main id="main">
+      <article class="prose">
+        
+      <header class="page-head">
+        <h1>X で「長押しで変化」する画像の作り方</h1>
+        
+      </header>
+        <p class="lede">「長押しで変化」と呼ばれる形式の仕組みは単純です。X は同じ投稿に対して 2 つの異なるファイルを表示しており、その 2 つを別の画像に見せることができます。</p>
+        <h2>X の内部で起きていること</h2>
+        <p>投稿に画像を添付すると、X は元ファイルを保持したまま、タイムライン用に縮小・再圧縮したコピーを生成します。フィードに表示されるのはコピーです。長押ししたり画像を開いたりすると、クライアントが元ファイルを取得します。</p>
+        <p>この 2 つの表示には差が 2 つあり、どちらも利用できます。コピーは縮小され JPEG を通るため、1 ピクセル単位で埋め込まれた情報は消えます。またタイムラインは明るい背景に合成されるのに対し、開いた表示は黒背景であり、透過の見え方が変わります。</p>
+        <h2>方法 1: 隠して見せる</h2>
+        <p>1 枚の画像を用意し、市松模様状に 1 ピクセルおきに透明にします。原寸では、やや淡いものの絵がそのまま見えます。縮小されると隣り合うピクセルが平均化され、画像と背景が混ざり、背景に十分近づくためフレームは空白に見えます。</p>
+        <p>これが「隠して見せる」モードの処理です。各ピクセルは元の色をそのまま保ちます。隠す働きは市松模様が担っているため、画像を淡くする必要がありません。その後、画像自体から 256 色のパレットを作成し、PNG-8 として書き出すことで、X が元ファイルを配信できるファイルサイズに収めています。</p>
+        <p>仕上げに 2 つの処理が入ります。枠に接した白に近い背景は市松模様ではなく完全な透明にするため、白背景は灰色のもやではなく消えます。また「暗い部分を残す」では、被写体の一部とは考えにくい小さな暗い領域を除去します。サムネイルサイズではノイズにしか見えないためです。</p>
+        <h2>方法 2: 2 枚入れ替え</h2>
+        <p>こちらは縮小ではなく透過を利用します。各ピクセルについて、白に合成すると画像 A、黒に合成すると画像 B になるような色と不透明度を求めます。</p>
+        <p>試す前に知っておくべき制約があります。2 つの式を引き算すると、2 つの合成結果はピクセルあたり 1 つの無彩色の値でしか差を作れないことが分かります。つまり任意の 2 枚のカラー画像は数学的に不可能です。そのため計算は明るさに対して行い、これは両方の画像が正確に再現できます。現れる側の画像はその上に自身の色を保ちます。タイムライン側には明るい画像を、現れる側には暗い画像を選んでください。</p>
+        
+        <h2>確実に動かすために</h2>
+        <p>書き出しを 5 MB 未満に保ってください。失敗の原因として最も多いのがこれです。超えると X は元ファイルを配信しなくなり、どちらの表示も同じ圧縮版になります。</p>
+        <p>公式アプリまたは Web からアップロードしてください。一部のサードパーティクライアントは画像を再エンコードしてアルファチャンネルを削除するため、X に届く前に効果が失われます。</p>
+        <p>まず非公開アカウントでテストしてください。この種のツールはすべて、いつ変わってもおかしくない非公開の挙動に依存しています。</p>
+        <h2>相性のよい使い方</h2>
+        <p>イラストの完成公開（タイムラインでは白紙、長押しで完成品）、オチを隠す投稿（前振りだけ見せて答えを隠す）、そしてビフォーアフター（ディザ方式より 2 枚入れ替えのほうが向いています）。</p>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>プロダクト</h2>
+          <a href="../../ja/">作成</a>
+          <a href="../../ja/how-to/">使い方</a>
+          <a href="../../ja/faq/">よくある質問</a>
+          <a href="../../ja/blog/">ブログ</a>
+        </div>
+        <div class="footer-col">
+          <h2>運営情報</h2>
+          <a href="../../ja/about/">運営者</a>
+          <a href="../../ja/privacy/">プライバシー</a>
+          <a href="../../ja/terms/">利用規約</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookie について</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>お問い合わせ</h2>
+          <p>ご質問・不具合・うまくいかない画像について:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">X の「長押しで変化」トレンド向けに作りました。X Corp. とは無関係です。</p>
+    </footer>
+
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookie について</h2>
+        <p>アクセス解析と広告のために Cookie を使用したいと考えています。どちらを選んでもエディターは通常どおり動作し、画像が端末から送信されることはありません。 <a href="../../ja/privacy/">プライバシーポリシー</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">必須のみ</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">同意する</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="../../site.js?v=1" defer></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Local preview bundle — regenerate with: npm run bundle
+preview.html
+
+# Stray local artefacts
+edge-profile/
+tweet-zoom-inspection/
+
+# OS junk
+Thumbs.db
+desktop.ini
+.DS_Store

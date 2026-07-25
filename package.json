@@ -1,5 +1,13 @@
 {
   "dependencies": {
     "pptxgenjs": "^4.0.1"
+  },
+  "name": "tap-me-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build/build.mjs",
+    "preview": "node build/serve.mjs",
+    "bundle": "node build/bundle.mjs"
   }
 }

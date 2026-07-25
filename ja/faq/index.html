@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>よくある質問 — Tap Me Studio</title>
+    <meta name="description" content="長押しで変化しない原因、X がファイルに対して行う処理、このツールでの対処方法をまとめています。">
+    <link rel="canonical" href="https://tapmestudio.com/ja/faq/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/faq/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/faq/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/faq/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="よくある質問">
+    <meta property="og:description" content="長押しで変化しない原因、X がファイルに対して行う処理、このツールでの対処方法をまとめています。">
+    <meta property="og:url" content="https://tapmestudio.com/ja/faq/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../site.css?v=1">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"長押ししても変化しません","acceptedAnswer":{"@type":"Answer","text":"この効果は、X が圧縮版ではなく元の PNG を配信したときにだけ働きます。失敗する原因は主に 3 つです。ファイルが 5 MB を超えている、長辺が 2432 px を大きく超えている、透過を削除するクライアントから投稿したために再エンコードされた、のいずれかです。小さいサイズで書き出し直し、投稿前にエディターが表示するファイルサイズを確認してください。"}},{"@type":"Question","name":"本当に無料ですか","acceptedAnswer":{"@type":"Answer","text":"はい。アカウント登録もウォーターマークも書き出し制限も有料プランもありません。サイトには広告を掲載しており、それがドメインとサーバーの費用に充てられています。"}},{"@type":"Question","name":"画像はどこかにアップロードされますか","acceptedAnswer":{"@type":"Answer","text":"いいえ。ファイルはお使いのブラウザ内の canvas 要素に読み込まれ、すべてのピクセル処理はそこで完結します。このアプリにはアップロード先が存在しません。作業中にネットワークタブを開けば、何も送信されていないことを確認できます。"}},{"@type":"Question","name":"Android やパソコンでも使えますか","acceptedAnswer":{"@type":"Answer","text":"作成はスマートフォンでもパソコンでも、最新のブラウザであれば動作します。効果の表示側は事情が異なり、X のクライアントに依存します。公式 iOS アプリが最も確実です。Android や Web 版では両方の状態で圧縮版が表示され、変化しないことがあります。"}},{"@type":"Question","name":"2 つのモードの違いは何ですか","acceptedAnswer":{"@type":"Answer","text":"「隠して見せる」は 1 枚の画像にディザをかけ、縮小されると背景に溶け込むようにします。フィードでは空白に見え、開くと戻ります。「2 枚入れ替え」は 2 枚の画像からピクセルごとの透明度を計算し、明るい背景では 1 枚目、暗い背景では 2 枚目として見えるファイルを作ります。"}},{"@type":"Question","name":"2 枚入れ替えの色が薄くなります","acceptedAnswer":{"@type":"Answer","text":"これは不具合ではなく、手法自体の限界です。白と黒に合成したとき、同じファイルは 1 ピクセルあたり明るさ 1 つ分しか差を作れないため、任意の 2 枚のカラー画像は原理的に表現できません。1 枚目に明るい画像、2 枚目に暗い画像を選ぶと、かなり近づきます。"}},{"@type":"Question","name":"商用利用はできますか","acceptedAnswer":{"@type":"Answer","text":"はい。作成した画像はあなたのものです。本ツールは作成物に対して一切の権利を主張しません。"}},{"@type":"Question","name":"今後も使えますか","acceptedAnswer":{"@type":"Answer","text":"お約束はできません。X は画像処理の仕組みを予告なく変更し、そのたびにこの種のツールは動かなくなります。本番で使う前に、非公開アカウントから一度テスト投稿することをおすすめします。"}}]}</script>
+  </head>
+  <body data-locale="ja" data-other-locale="en" data-other-url="/faq/">
+    <a class="skip-link" href="#main">エディターへ移動</a>
+    <header class="site-header">
+      <a class="brand" href="../../ja/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="../../ja/">作成</a>
+        <a href="../../ja/how-to/">使い方</a>
+        <a href="../../ja/faq/" aria-current="page">よくある質問</a>
+        <a href="../../ja/blog/">ブログ</a>
+        <a href="../../ja/about/">運営者</a>
+      </nav>
+      <a class="lang-switch" href="../../faq/" hreflang="en" lang="en">English</a>
+    </header>
+    <main id="main">
+      <article class="prose">
+        
+      <header class="page-head">
+        <h1>よくある質問</h1>
+        
+      </header>
+        <p class="lede">うまくいかない原因のほとんどは同じです。X が元ファイルではなく圧縮版を配信した、という点にあります。以下で原因と対処をまとめます。</p>
+        <div class="qa-list">
+          <details class="qa" open>
+            <summary>長押ししても変化しません</summary>
+            <p>この効果は、X が圧縮版ではなく元の PNG を配信したときにだけ働きます。失敗する原因は主に 3 つです。ファイルが 5 MB を超えている、長辺が 2432 px を大きく超えている、透過を削除するクライアントから投稿したために再エンコードされた、のいずれかです。小さいサイズで書き出し直し、投稿前にエディターが表示するファイルサイズを確認してください。</p>
+          </details>
+          <details class="qa">
+            <summary>本当に無料ですか</summary>
+            <p>はい。アカウント登録もウォーターマークも書き出し制限も有料プランもありません。サイトには広告を掲載しており、それがドメインとサーバーの費用に充てられています。</p>
+          </details>
+          <details class="qa">
+            <summary>画像はどこかにアップロードされますか</summary>
+            <p>いいえ。ファイルはお使いのブラウザ内の canvas 要素に読み込まれ、すべてのピクセル処理はそこで完結します。このアプリにはアップロード先が存在しません。作業中にネットワークタブを開けば、何も送信されていないことを確認できます。</p>
+          </details>
+          <details class="qa">
+            <summary>Android やパソコンでも使えますか</summary>
+            <p>作成はスマートフォンでもパソコンでも、最新のブラウザであれば動作します。効果の表示側は事情が異なり、X のクライアントに依存します。公式 iOS アプリが最も確実です。Android や Web 版では両方の状態で圧縮版が表示され、変化しないことがあります。</p>
+          </details>
+          
+          <details class="qa">
+            <summary>2 つのモードの違いは何ですか</summary>
+            <p>「隠して見せる」は 1 枚の画像にディザをかけ、縮小されると背景に溶け込むようにします。フィードでは空白に見え、開くと戻ります。「2 枚入れ替え」は 2 枚の画像からピクセルごとの透明度を計算し、明るい背景では 1 枚目、暗い背景では 2 枚目として見えるファイルを作ります。</p>
+          </details>
+          <details class="qa">
+            <summary>2 枚入れ替えの色が薄くなります</summary>
+            <p>これは不具合ではなく、手法自体の限界です。白と黒に合成したとき、同じファイルは 1 ピクセルあたり明るさ 1 つ分しか差を作れないため、任意の 2 枚のカラー画像は原理的に表現できません。1 枚目に明るい画像、2 枚目に暗い画像を選ぶと、かなり近づきます。</p>
+          </details>
+          <details class="qa">
+            <summary>商用利用はできますか</summary>
+            <p>はい。作成した画像はあなたのものです。本ツールは作成物に対して一切の権利を主張しません。</p>
+          </details>
+          <details class="qa">
+            <summary>今後も使えますか</summary>
+            <p>お約束はできません。X は画像処理の仕組みを予告なく変更し、そのたびにこの種のツールは動かなくなります。本番で使う前に、非公開アカウントから一度テスト投稿することをおすすめします。</p>
+          </details>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>プロダクト</h2>
+          <a href="../../ja/">作成</a>
+          <a href="../../ja/how-to/">使い方</a>
+          <a href="../../ja/faq/">よくある質問</a>
+          <a href="../../ja/blog/">ブログ</a>
+        </div>
+        <div class="footer-col">
+          <h2>運営情報</h2>
+          <a href="../../ja/about/">運営者</a>
+          <a href="../../ja/privacy/">プライバシー</a>
+          <a href="../../ja/terms/">利用規約</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookie について</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>お問い合わせ</h2>
+          <p>ご質問・不具合・うまくいかない画像について:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">X の「長押しで変化」トレンド向けに作りました。X Corp. とは無関係です。</p>
+    </footer>
+
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookie について</h2>
+        <p>アクセス解析と広告のために Cookie を使用したいと考えています。どちらを選んでもエディターは通常どおり動作し、画像が端末から送信されることはありません。 <a href="../../ja/privacy/">プライバシーポリシー</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">必須のみ</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">同意する</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="../../site.js?v=1" defer></script>
+  </body>
+</html>

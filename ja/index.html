@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>無料の「長押しで変化」画像メーカー（X / Twitter） — Tap Me Studio</title>
+    <meta name="description" content="画像をアップロードして隠す範囲を選ぶだけで、X で長押しすると変化する PNG が作れます。無料・登録不要・ブラウザ内で完結します。">
+    <link rel="canonical" href="https://tapmestudio.com/ja/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="無料の「長押しで変化」画像メーカー（X / Twitter）">
+    <meta property="og:description" content="画像をアップロードして隠す範囲を選ぶだけで、X で長押しすると変化する PNG が作れます。無料・登録不要・ブラウザ内で完結します。">
+    <meta property="og:url" content="https://tapmestudio.com/ja/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../site.css?v=1">
+    <link rel="stylesheet" href="../styles.css?v=2">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Tap Me Studio","applicationCategory":"MultimediaApplication","operatingSystem":"Web","url":"https://tapmestudio.com/ja/","description":"画像をアップロードして隠す範囲を選ぶだけで、X で長押しすると変化する PNG が作れます。無料・登録不要・ブラウザ内で完結します。","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"長押ししても変化しません","acceptedAnswer":{"@type":"Answer","text":"この効果は、X が圧縮版ではなく元の PNG を配信したときにだけ働きます。失敗する原因は主に 3 つです。ファイルが 5 MB を超えている、長辺が 2432 px を大きく超えている、透過を削除するクライアントから投稿したために再エンコードされた、のいずれかです。小さいサイズで書き出し直し、投稿前にエディターが表示するファイルサイズを確認してください。"}},{"@type":"Question","name":"本当に無料ですか","acceptedAnswer":{"@type":"Answer","text":"はい。アカウント登録もウォーターマークも書き出し制限も有料プランもありません。サイトには広告を掲載しており、それがドメインとサーバーの費用に充てられています。"}},{"@type":"Question","name":"画像はどこかにアップロードされますか","acceptedAnswer":{"@type":"Answer","text":"いいえ。ファイルはお使いのブラウザ内の canvas 要素に読み込まれ、すべてのピクセル処理はそこで完結します。このアプリにはアップロード先が存在しません。作業中にネットワークタブを開けば、何も送信されていないことを確認できます。"}},{"@type":"Question","name":"Android やパソコンでも使えますか","acceptedAnswer":{"@type":"Answer","text":"作成はスマートフォンでもパソコンでも、最新のブラウザであれば動作します。効果の表示側は事情が異なり、X のクライアントに依存します。公式 iOS アプリが最も確実です。Android や Web 版では両方の状態で圧縮版が表示され、変化しないことがあります。"}}]}</script>
+  </head>
+  <body data-locale="ja" data-other-locale="en" data-other-url="/">
+    <a class="skip-link" href="#main">エディターへ移動</a>
+    <header class="site-header">
+      <a class="brand" href="../ja/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="../ja/" aria-current="page">作成</a>
+        <a href="../ja/how-to/">使い方</a>
+        <a href="../ja/faq/">よくある質問</a>
+        <a href="../ja/blog/">ブログ</a>
+        <a href="../ja/about/">運営者</a>
+      </nav>
+      <a class="lang-switch" href="../" hreflang="en" lang="en">English</a>
+    </header>
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">無料・登録不要</p>
+          <h1><span>長押しで変化する</span>画像メーカー</h1>
+          <p class="lede">画像をアップロードして隠す範囲を選ぶと、X のタイムラインでは空白に見え、長押しすると全体が表示される PNG をダウンロードできます。</p>
+          <a class="cta" href="#main-editor">エディターを開く</a>
+          <p class="hero-note">ブラウザ内で処理され、画像がアップロードされることはありません。</p>
+        </div>
+        
+          <figure class="demo" id="demo">
+            <div class="demo-plate" id="demoPlate" tabindex="0" role="button" aria-pressed="false"
+                 data-hidden-label="タイムライン" data-held-label="表示">
+              <svg class="demo-art" viewBox="0 0 400 500" aria-label="Demo artwork" role="img">
+                <defs>
+                  <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#ff6a2b"/>
+                    <stop offset="0.55" stop-color="#c8324f"/>
+                    <stop offset="1" stop-color="#2b1c4a"/>
+                  </linearGradient>
+                  <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0" stop-color="#ffe6a8"/>
+                    <stop offset="1" stop-color="#ffb03a"/>
+                  </radialGradient>
+                </defs>
+                <rect width="400" height="500" fill="url(#sky)"/>
+                <circle cx="200" cy="212" r="86" fill="url(#sun)"/>
+                <path d="M0 330 L104 236 L182 316 L262 214 L400 348 L400 500 L0 500 Z" fill="#150f1c"/>
+                <path d="M0 392 L92 330 L206 404 L318 340 L400 396 L400 500 L0 500 Z" fill="#0b0810"/>
+                <g fill="#150f1c">
+                  <circle cx="120" cy="150" r="5"/><circle cx="286" cy="128" r="7"/><circle cx="322" cy="176" r="4"/>
+                </g>
+              </svg>
+              <span class="demo-screen" aria-hidden="true"></span>
+              <span class="demo-hold" aria-hidden="true">長押しで表示</span>
+            </div>
+            <figcaption class="demo-caption">
+              <span class="demo-state" id="demoState"></span>
+            </figcaption>
+          </figure>
+      </section>
+
+      <section class="section" id="main-editor">
+        <div class="section-head">
+          <span class="eyebrow">エディター</span>
+          <h2>画像を作成</h2>
+        </div>
+        
+        <div class="app-shell">
+          <header class="topbar">
+            <div class="readout" aria-label="Render status">
+              <span class="readout-cell">
+                <span class="readout-key">ステータス</span>
+                <strong id="statusText">画像をドロップして開始</strong>
+              </span>
+              <span class="readout-cell">
+                <span class="readout-key">出力</span>
+                <strong id="outputSize">待機中</strong>
+              </span>
+            </div>
+            <div class="action-row">
+              <button class="secondary-button" id="resetButton" type="button">リセット</button>
+              <button class="primary-button" id="downloadButton" type="button" disabled>PNG をダウンロード</button>
+            </div>
+          </header>
+
+          <section class="creator-panel" aria-label="書き出し">
+            <section class="module">
+              <div class="module-head"><span class="eyebrow">01</span><h3>モードを選ぶ</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <div class="module-body">
+                <div class="tabs" role="tablist">
+                  <button class="tab is-active" id="modeHide" type="button" role="tab" aria-selected="true">隠して見せる</button>
+                  <button class="tab" id="modeSwap" type="button" role="tab" aria-selected="false">2 枚入れ替え</button>
+                </div>
+                <label class="drop-zone" for="sourceInput" id="sourceDrop">
+                  <input id="sourceInput" type="file" accept="image/*">
+                  <span class="drop-mark" aria-hidden="true"></span>
+                  <span class="drop-title" id="sourceTitle">画像をドロップ</span>
+                  <span class="drop-meta" id="sourceMeta">PNG または JPG。端末から送信されません。</span>
+                </label>
+                <label class="drop-zone" for="secondInput" id="secondDrop" hidden>
+                  <input id="secondInput" type="file" accept="image/*">
+                  <span class="drop-mark" aria-hidden="true"></span>
+                  <span class="drop-title">現れる画像をドロップ</span>
+                  <span class="drop-meta" id="secondMeta">長押しで現れる画像です。</span>
+                </label>
+                <p class="hint" id="modeHint">1 枚の画像がタイムラインでは隠れ、長押しすると戻ります。</p>
+              </div>
+            </section>
+
+            <section class="module" id="visibilityModule">
+              <div class="module-head"><span class="eyebrow">02</span><h3>見せる部分</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <div class="module-body">
+                <div class="choice-group" role="radiogroup" aria-label="見せる部分">
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="none" checked>
+                    <span><strong>すべて隠す</strong><small>タイムラインではほぼ空白になります。</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="dark">
+                    <span><strong>暗い部分を残す</strong><small>影と輪郭が予告として残ります。</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="object">
+                    <span><strong>オブジェクトを選択</strong><small>対象をクリックすると輪郭に沿って選択され、そのまま表示されます。</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="paint">
+                    <span><strong>手描きで指定</strong><small>サムネイルに残す範囲を塗ります。</small></span>
+                  </label>
+                </div>
+                <label class="range-row" id="thresholdRow" hidden>
+                  <span><strong>明るさのしきい値</strong><em id="thresholdValue">150</em></span>
+                  <input id="threshold" type="range" min="40" max="240" value="150">
+                </label>
+
+                <div class="paint-tools" id="objectTools" hidden>
+                  <label class="range-row">
+                    <span><strong>許容範囲</strong><em id="toleranceValue">34</em></span>
+                    <input id="tolerance" type="range" min="6" max="90" value="34">
+                    <small class="range-note">選択がどこまで色の違いを許すか。Alt を押しながらクリックで選択解除。</small>
+                  </label>
+                  <div class="pattern-actions">
+                    <button class="mini-button" id="markAdd" type="button" aria-pressed="true">選択</button>
+                    <button class="mini-button" id="markRemove" type="button" aria-pressed="false">解除</button>
+                  </div>
+                  <button class="mini-button mini-button-wide" id="clearMarks" type="button">選択を消去</button>
+                </div>
+
+                <div class="paint-tools" id="paintTools" hidden>
+                  <label class="range-row">
+                    <span><strong>ブラシサイズ</strong><em id="brushSizeValue">64px</em></span>
+                    <input id="brushSize" type="range" min="8" max="240" value="64">
+                  </label>
+                  <div class="pattern-actions">
+                    <button class="mini-button" id="brushKeep" type="button" aria-pressed="true">残す</button>
+                    <button class="mini-button" id="brushHide" type="button" aria-pressed="false">また隠す</button>
+                  </div>
+                  <button class="mini-button mini-button-wide" id="clearPaint" type="button">塗りを消去</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="module">
+              <div class="module-head"><span class="eyebrow">03</span><h3>書き出し</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <div class="module-body">
+                <label class="field-row">
+                  <span>サイズ</span>
+                  <select id="outputRatio">
+                    <option value="auto" selected>自動 — 元の比率</option>
+                    <option value="1:1">1:1 — 2432 x 2432</option>
+                    <option value="2:3">2:3 — 1664 x 2432</option>
+                    <option value="4:5">4:5 — 1946 x 2432</option>
+                    <option value="9:16">9:16 — 1368 x 2432</option>
+                    <option value="16:9">16:9 — 2432 x 1368</option>
+                    <option value="3:2">3:2 — 2432 x 1621</option>
+                  </select>
+                </label>
+                <label class="range-row">
+                  <span><strong>黒を締める</strong><em id="blackPointValue">0</em></span>
+                  <input id="blackPoint" type="range" min="0" max="90" value="0">
+                  <small class="range-note">トリックの前に暗部を黒に寄せます。ダークモードのタイムラインで効きます。</small>
+                </label>
+
+                <label class="toggle-row">
+                  <span><strong>高解像度で読み込ませる</strong><small>推奨。長押し時に元ファイルを配信させます。</small></span>
+                  <input id="upscale" type="checkbox" checked>
+                </label>
+                <label class="toggle-row">
+                  <span><strong>線画の予告を自動生成</strong><small>輪郭だけがタイムラインに残ります。</small></span>
+                  <input id="lineArt" type="checkbox">
+                </label>
+                <label class="toggle-row">
+                  <span><strong>明るさを強調</strong><small>暗い背景でも現れる側が読めるようにします。</small></span>
+                  <input id="brightnessBoost" type="checkbox">
+                </label>
+              </div>
+            </section>
+
+            <section class="module">
+              <div class="module-head"><span class="eyebrow">!</span><h3>投稿する前に</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <p class="hint">変化には X が元の PNG を配信する必要があるため、5 MB 未満に保ってください。X は予告なく画像処理を変更します。まず非公開アカウントでテスト投稿を。</p>
+            </section>
+          </section>
+
+          <section class="simulator-panel" aria-label="Preview">
+            <div class="sim-header">
+              <div class="sim-title"><span id="renderBadge">画像が読み込まれていません</span></div>
+              <div class="canvas-toolbar">
+                <button class="tool-button" id="timelineToggle" type="button">タイムラインを隠す</button>
+                <span class="toolbar-sep" aria-hidden="true"></span>
+                <button class="icon-button" id="canvasZoomOut" type="button" aria-label="Zoom out">&minus;</button>
+                <input id="canvasZoom" type="range" min="25" max="400" value="100" aria-label="Zoom">
+                <span class="zoom-readout" id="canvasZoomValue">100%</span>
+                <button class="icon-button" id="canvasZoomIn" type="button" aria-label="Zoom in">+</button>
+                <button class="tool-button" id="canvasZoomReset" type="button">全体表示</button>
+              </div>
+            </div>
+            <div class="preview-grid">
+              <article class="preview-card is-hidden-state">
+                <header class="preview-title">
+                  <span class="state-dot" aria-hidden="true"></span>
+                  <div class="preview-title-text">
+                    <span class="eyebrow">タイムライン</span><strong>X に表示される状態</strong>
+                  </div>
+                  <div class="ground-toggle" role="group" aria-label="タイムラインの背景">
+                    <button type="button" id="themeLight" class="ground-button is-active" aria-pressed="true">ライト</button>
+                    <button type="button" id="themeDark" class="ground-button" aria-pressed="false">ダーク</button>
+                  </div>
+                </header>
+                <div class="image-stage preview-stage" id="timelineFrame">
+                  <canvas id="timelineCanvas" width="680" height="425"></canvas>
+                </div>
+              </article>
+              <article class="preview-card is-revealed-state">
+                <header class="preview-title">
+                  <span class="state-dot" aria-hidden="true"></span>
+                  <div class="preview-title-text">
+                    <span class="eyebrow">拡大表示</span><strong>長押しで現れる状態</strong>
+                  </div>
+                </header>
+                <div class="image-stage expanded-stage" id="openedStage">
+                  <div class="canvas-wrap">
+                    <canvas id="openedCanvas" width="900" height="1125"></canvas>
+                    <canvas id="paintOverlayCanvas" class="paint-overlay" width="900" height="1125" aria-hidden="true"></canvas>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <span class="eyebrow">使い方</span>
+          <h2>3 ステップ</h2>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-index" aria-hidden="true">01</span>
+            <h3>画像をアップロード</h3>
+            <p>PNG または JPG をドロップします。ブラウザ内で処理され、サーバーには送信されません。</p>
+          </li>
+          <li>
+            <span class="step-index" aria-hidden="true">02</span>
+            <h3>見せる部分を選ぶ</h3>
+            <p>全体を隠す、暗い部分を残す、サムネイルに残す範囲を手描きで塗る、の 3 通りから選べます。</p>
+          </li>
+          <li>
+            <span class="step-index" aria-hidden="true">03</span>
+            <h3>保存して投稿</h3>
+            <p>PNG を保存して X の投稿に添付します。5 MB を超えると X が圧縮版を配信するため、変化しません。</p>
+          </li>
+        </ol>
+        <p class="section-more"><a href="../ja/how-to/">詳しいガイドを読む →</a></p>
+      </section>
+
+      <section class="section section-alt">
+        <div class="section-head">
+          <span class="eyebrow">詳細</span>
+          <h2>このツールの特徴</h2>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <h3>正確なタイムラインプレビュー</h3>
+            <p>単に縮小するのではなく、フィードの背景に合成し、X と同じ方法でリサイズし、JPEG 圧縮をかけます。プレビューが投稿結果と一致します。</p>
+          </article>
+          <article class="card">
+            <h3>PNG-8 で書き出し</h3>
+            <p>RGBA ではなく 256 色パレットと透過チャンクを使用します。ファイルは通常 40〜90 KB に収まり、X の 5 MB 上限を下回ります。</p>
+          </article>
+          <article class="card">
+            <h3>2 つの方式</h3>
+            <p>「隠して見せる」はフィードの縮小処理を利用します。「2 枚入れ替え」はピクセルごとの透明度を計算し、1 枚のファイルを 2 枚の画像として表示します。両方に対応しています。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <span class="eyebrow">よくある質問</span>
+          <h2>よくある質問</h2>
+        </div>
+        <div class="qa-list">
+          <details class="qa">
+            <summary>長押ししても変化しません</summary>
+            <p>この効果は、X が圧縮版ではなく元の PNG を配信したときにだけ働きます。失敗する原因は主に 3 つです。ファイルが 5 MB を超えている、長辺が 2432 px を大きく超えている、透過を削除するクライアントから投稿したために再エンコードされた、のいずれかです。小さいサイズで書き出し直し、投稿前にエディターが表示するファイルサイズを確認してください。</p>
+          </details>
+          <details class="qa">
+            <summary>本当に無料ですか</summary>
+            <p>はい。アカウント登録もウォーターマークも書き出し制限も有料プランもありません。サイトには広告を掲載しており、それがドメインとサーバーの費用に充てられています。</p>
+          </details>
+          <details class="qa">
+            <summary>画像はどこかにアップロードされますか</summary>
+            <p>いいえ。ファイルはお使いのブラウザ内の canvas 要素に読み込まれ、すべてのピクセル処理はそこで完結します。このアプリにはアップロード先が存在しません。作業中にネットワークタブを開けば、何も送信されていないことを確認できます。</p>
+          </details>
+          <details class="qa">
+            <summary>Android やパソコンでも使えますか</summary>
+            <p>作成はスマートフォンでもパソコンでも、最新のブラウザであれば動作します。効果の表示側は事情が異なり、X のクライアントに依存します。公式 iOS アプリが最も確実です。Android や Web 版では両方の状態で圧縮版が表示され、変化しないことがあります。</p>
+          </details>
+        </div>
+        <p class="section-more"><a href="../ja/faq/">すべての質問を見る →</a></p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>プロダクト</h2>
+          <a href="../ja/">作成</a>
+          <a href="../ja/how-to/">使い方</a>
+          <a href="../ja/faq/">よくある質問</a>
+          <a href="../ja/blog/">ブログ</a>
+        </div>
+        <div class="footer-col">
+          <h2>運営情報</h2>
+          <a href="../ja/about/">運営者</a>
+          <a href="../ja/privacy/">プライバシー</a>
+          <a href="../ja/terms/">利用規約</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookie について</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>お問い合わせ</h2>
+          <p>ご質問・不具合・うまくいかない画像について:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">X の「長押しで変化」トレンド向けに作りました。X Corp. とは無関係です。</p>
+    </footer>
+
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookie について</h2>
+        <p>アクセス解析と広告のために Cookie を使用したいと考えています。どちらを選んでもエディターは通常どおり動作し、画像が端末から送信されることはありません。 <a href="../ja/privacy/">プライバシーポリシー</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">必須のみ</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">同意する</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="../site.js?v=1" defer></script>
+    <script src="../app.js?v=3" defer></script>
+  </body>
+</html>

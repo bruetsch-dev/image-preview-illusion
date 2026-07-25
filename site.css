@@ -1,0 +1,875 @@
+/* ==========================================================================
+   Tap Me Studio — "Safelight"
+   A darkroom, because the product makes latent images: invisible until they
+   develop. Darkrooms are lit amber because that is the one wavelength the
+   emulsion cannot see.
+
+   The palette carries state rather than decorating:
+     amber  = hidden   (the timeline, what X shows)
+     cyan   = developed (the full view, what the tap uncovers)
+
+   Tokens and site chrome live here. styles.css holds the editor.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  --void: #14100e;
+  --tray: #1c1714;
+  --tray-2: #221b17;
+  --well: #0f0c0a;
+
+  --safelight: #ff521f;
+  --safelight-line: rgba(255, 82, 31, 0.18);
+  --developed: #67d9e8;
+
+  --emulsion: #f4eadc;
+  --dim: #a08f80;
+  --faint: #8b7b6d;
+
+  --rule: rgba(244, 234, 220, 0.09);
+  --sunk: rgba(9, 6, 5, 0.42);
+
+  --radius: 4px;
+  --measure: 68ch;
+  --page: 1180px;
+
+  --font-display: "Bahnschrift", "Archivo Narrow", "Oswald", "Arial Narrow", "Haettenschweiler", sans-serif;
+  --font-mono: "Cascadia Mono", "Cascadia Code", Consolas, "SF Mono", ui-monospace, monospace;
+  --font-text: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Japanese needs a face that actually has the glyphs, and a little more
+   line-height to stay readable at the same size. */
+html[lang="ja"] {
+  --font-display: "Bahnschrift", "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --font-text: "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--emulsion);
+  font-family: var(--font-text);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* The safelight: a slow amber wash over the whole room. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(120vw 90vh at 8% -14%, rgba(255, 82, 31, 0.1), transparent 60%),
+    radial-gradient(70vw 60vh at 98% 4%, rgba(255, 82, 31, 0.045), transparent 58%);
+  pointer-events: none;
+  animation: safelight 24s ease-in-out infinite alternate;
+}
+
+@keyframes safelight {
+  from { opacity: 0.8; }
+  to   { opacity: 1; }
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+a {
+  color: var(--emulsion);
+  text-decoration-color: var(--safelight-line);
+  text-underline-offset: 3px;
+}
+
+a:hover { text-decoration-color: var(--safelight); }
+
+:focus-visible {
+  outline: 2px solid var(--safelight);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--safelight);
+  color: var(--void);
+}
+
+[hidden] { display: none !important; }
+
+img, svg { max-width: 100%; }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--safelight);
+  color: #180a04;
+}
+
+.skip-link:focus { left: 0; }
+
+/* ---------- Type roles ------------------------------------------------- */
+
+.eyebrow {
+  display: block;
+  margin: 0;
+  color: var(--safelight);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-variation-settings: "wght" 700, "wdth" 85;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1.02;
+}
+
+/* The divider is a halftone screen — the thing this app actually prints. */
+.rule {
+  height: 3px;
+  margin: 11px 0 13px;
+  background-image: radial-gradient(circle at 50% 50%, var(--safelight) 0.85px, transparent 1.1px);
+  background-size: 4px 3px;
+  opacity: 0.4;
+}
+
+.hint {
+  margin: 0;
+  color: var(--dim);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.lede {
+  max-width: 60ch;
+  color: var(--dim);
+  font-size: clamp(15px, 1.5vw, 17.5px);
+  line-height: 1.62;
+}
+
+/* ---------- Header ------------------------------------------------------ */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  min-height: 62px;
+  padding: 0 clamp(14px, 3vw, 34px);
+  border-bottom: 1px solid var(--rule);
+  background: rgba(28, 23, 20, 0.92);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+
+/* Half solid ink, half screened dots: the two states of every export. */
+.brand-mark {
+  width: 19px;
+  height: 19px;
+  border-radius: 1px;
+  background-image: radial-gradient(circle at 50% 50%, var(--safelight) 1.25px, transparent 1.55px);
+  background-size: 4px 4px;
+  box-shadow: inset -9.5px 0 0 -0.5px var(--safelight);
+}
+
+.brand-text {
+  display: flex;
+  gap: 5px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  font-variation-settings: "wght" 700, "wdth" 82;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brand-text em {
+  color: var(--dim);
+  font-style: normal;
+  font-variation-settings: "wght" 400, "wdth" 82;
+}
+
+.site-nav {
+  display: flex;
+  gap: 20px;
+  margin-right: auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.site-nav::-webkit-scrollbar { display: none; }
+
+.site-nav a {
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 4px 0;
+  border-bottom: 1px solid transparent;
+}
+
+.site-nav a:hover { color: var(--emulsion); }
+
+.site-nav a[aria-current="page"] {
+  color: var(--emulsion);
+  border-bottom-color: var(--safelight);
+}
+
+.lang-switch {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-decoration: none;
+}
+
+.lang-switch:hover {
+  border-color: var(--safelight);
+  color: var(--emulsion);
+}
+
+/* ---------- Hero — the thesis ------------------------------------------ */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 72px);
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(38px, 7vw, 96px) clamp(14px, 3vw, 34px) clamp(30px, 5vw, 70px);
+}
+
+.hero h1 {
+  margin: 14px 0 20px;
+  font-size: clamp(34px, 5.2vw, 62px);
+  line-height: 0.98;
+  /* Let the browser pick the break. Forcing one produced a line too long for
+     the column at some widths, which wrapped and broke the rhythm. */
+  text-wrap: balance;
+}
+
+/* The accent lands on the mechanic itself, not on whichever line happens to
+   come last. */
+.hero h1 span { color: var(--safelight); }
+
+html[lang="ja"] .hero h1 {
+  font-size: clamp(27px, 4vw, 46px);
+  line-height: 1.24;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 22px;
+  padding: 13px 26px;
+  border-radius: var(--radius);
+  background: var(--safelight);
+  color: #180a04;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  font-variation-settings: "wght" 700, "wdth" 88;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 130ms ease;
+}
+
+.cta:hover { background: #ff6a3c; }
+
+.hero-note {
+  margin: 14px 0 0;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+/* The demo plate. Screened and washed out until you hold it, then it
+   develops — the one orchestrated moment on the page. */
+.demo {
+  margin: 0;
+}
+
+.demo-plate {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--safelight-line);
+  border-radius: var(--radius);
+  background: #f7f9f9;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  transition: border-color 380ms ease, box-shadow 380ms ease;
+}
+
+.demo-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The screen: a near-white wash with a fine dot grid punched through it,
+   which is what a hidden export actually looks like in the feed. */
+.demo-screen {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(249, 250, 250, 0.93);
+  background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0.8px, transparent 1.15px);
+  background-size: 3px 3px;
+  transition: opacity 420ms cubic-bezier(0.22, 0.8, 0.28, 1);
+}
+
+.demo-hold {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: rgba(20, 16, 14, 0.72);
+  color: var(--emulsion);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: opacity 220ms ease;
+}
+
+.demo-plate.is-held {
+  border-color: var(--developed);
+  box-shadow: 0 0 0 1px rgba(103, 217, 232, 0.4), 0 24px 60px rgba(103, 217, 232, 0.14);
+}
+
+.demo-plate.is-held .demo-screen { opacity: 0; }
+.demo-plate.is-held .demo-hold { opacity: 0; }
+
+.demo-caption {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 12px 0 0;
+}
+
+.demo-caption::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--safelight);
+  box-shadow: 0 0 10px var(--safelight);
+  transition: background-color 380ms ease, box-shadow 380ms ease;
+}
+
+.demo.is-held .demo-caption::before {
+  background: var(--developed);
+  box-shadow: 0 0 10px var(--developed);
+}
+
+.demo-state {
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+/* ---------- Sections ---------------------------------------------------- */
+
+.section {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(34px, 5.5vw, 76px) clamp(14px, 3vw, 34px);
+}
+
+.section-alt {
+  max-width: none;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  background: rgba(28, 23, 20, 0.5);
+}
+
+.section-alt > * {
+  max-width: var(--page);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-head {
+  margin-bottom: 26px;
+}
+
+.section-head h2 {
+  margin: 8px 0 0;
+  font-size: clamp(26px, 3.4vw, 40px);
+}
+
+html[lang="ja"] .section-head h2 { font-size: clamp(22px, 2.8vw, 32px); }
+
+.section-more {
+  margin: 26px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.section-more a { text-decoration: none; color: var(--safelight); }
+.section-more a:hover { text-decoration: underline; }
+
+/* Steps are genuinely ordered — you cannot download before you upload — so
+   the numbering carries information rather than decorating. */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  padding-top: 16px;
+  border-top: 3px solid transparent;
+  background-image: radial-gradient(circle at 50% 50%, var(--safelight) 0.85px, transparent 1.1px);
+  background-size: 4px 3px;
+  background-repeat: repeat-x;
+  background-position: top left;
+}
+
+.step-index {
+  display: block;
+  color: var(--safelight);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}
+
+.steps h3 {
+  margin: 10px 0 8px;
+  font-size: 19px;
+}
+
+.steps p {
+  margin: 0;
+  color: var(--dim);
+  font-size: 14px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--sunk);
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.card p {
+  margin: 0;
+  color: var(--dim);
+  font-size: 14px;
+}
+
+/* ---------- Q&A --------------------------------------------------------- */
+
+.qa-list {
+  display: grid;
+  gap: 8px;
+}
+
+.qa {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--sunk);
+}
+
+.qa summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 15px 18px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-variation-settings: "wght" 700, "wdth" 88;
+  list-style: none;
+}
+
+html[lang="ja"] .qa summary { font-size: 15px; }
+
+.qa summary::-webkit-details-marker { display: none; }
+
+.qa summary::before {
+  content: "+";
+  flex: 0 0 auto;
+  color: var(--safelight);
+  font-family: var(--font-mono);
+  font-size: 15px;
+}
+
+.qa[open] summary::before { content: "\2212"; }
+
+.qa[open] summary { padding-bottom: 4px; }
+
+.qa p {
+  margin: 0;
+  padding: 0 18px 17px 42px;
+  color: var(--dim);
+  font-size: 14.5px;
+}
+
+/* ---------- Prose pages -------------------------------------------------- */
+
+.prose {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: clamp(30px, 5vw, 64px) clamp(14px, 3vw, 34px) clamp(48px, 7vw, 90px);
+}
+
+.page-head {
+  margin-bottom: 26px;
+  padding-bottom: 20px;
+  background-image: radial-gradient(circle at 50% 50%, var(--safelight) 0.85px, transparent 1.1px);
+  background-size: 4px 3px;
+  background-repeat: repeat-x;
+  background-position: bottom left;
+}
+
+.page-head h1 {
+  margin: 0;
+  font-size: clamp(30px, 4.6vw, 52px);
+}
+
+html[lang="ja"] .page-head h1 { font-size: clamp(24px, 3.4vw, 38px); }
+
+.page-meta {
+  margin: 0 0 8px;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.prose h2 {
+  margin: 40px 0 12px;
+  font-size: clamp(19px, 2.3vw, 25px);
+}
+
+.prose p {
+  margin: 0 0 16px;
+  color: var(--dim);
+}
+
+.prose .lede {
+  color: var(--emulsion);
+  margin-bottom: 30px;
+}
+
+.prose .qa-list { margin-top: 24px; }
+
+.post-list {
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.post-list a {
+  display: block;
+  padding: 20px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--sunk);
+  text-decoration: none;
+  transition: border-color 130ms ease;
+}
+
+.post-list a:hover { border-color: var(--safelight); }
+
+.post-list time {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.post-list h2 {
+  margin: 8px 0 8px;
+  font-size: 21px;
+}
+
+.post-list p {
+  margin: 0;
+  color: var(--dim);
+  font-size: 14px;
+}
+
+/* ---------- Ads ---------------------------------------------------------- */
+
+/* Reserved height so a late-loading ad cannot shove the page around, and a
+   label so nobody mistakes it for the product. */
+.ad-slot {
+  display: block;
+  max-width: var(--page);
+  margin: 8px auto;
+  padding: 10px clamp(14px, 3vw, 34px) 18px;
+}
+
+.ad-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.ad-slot ins {
+  display: block;
+  min-height: 100px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--sunk);
+}
+
+/* ---------- Footer -------------------------------------------------------- */
+
+.site-footer {
+  border-top: 1px solid var(--rule);
+  background: rgba(28, 23, 20, 0.66);
+  padding: clamp(34px, 5vw, 60px) clamp(14px, 3vw, 34px) 34px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 30px;
+  max-width: var(--page);
+  margin: 0 auto;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.footer-col h2 {
+  margin: 0 0 4px;
+  color: var(--safelight);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+
+.footer-col a,
+.link-button {
+  color: var(--dim);
+  font-size: 13.5px;
+  text-decoration: none;
+}
+
+.footer-col a:hover,
+.link-button:hover {
+  color: var(--emulsion);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+}
+
+.footer-contact p {
+  margin: 0;
+  color: var(--dim);
+  font-size: 13.5px;
+}
+
+.footer-note {
+  max-width: var(--page);
+  margin: 34px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+  color: var(--faint);
+  font-size: 12.5px;
+}
+
+/* ---------- Consent ------------------------------------------------------- */
+
+.consent {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 80;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  width: min(880px, calc(100vw - 24px));
+  padding: 16px 18px;
+  border: 1px solid var(--safelight-line);
+  border-radius: var(--radius);
+  background: rgba(24, 19, 16, 0.97);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+}
+
+.consent h2 {
+  margin: 0 0 5px;
+  font-size: 15px;
+}
+
+.consent p {
+  margin: 0;
+  color: var(--dim);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.consent-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.mini-button {
+  height: 34px;
+  padding: 0 15px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
+}
+
+.mini-button:hover {
+  border-color: var(--safelight);
+  color: var(--emulsion);
+}
+
+.mini-button-accent {
+  border-color: var(--safelight);
+  background: var(--safelight);
+  color: #180a04;
+}
+
+.mini-button-accent:hover {
+  background: #ff6a3c;
+  color: #180a04;
+}
+
+/* ---------- Narrow --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .demo-plate { aspect-ratio: 5 / 4; }
+
+  .consent {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .consent-actions { justify-content: flex-end; }
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .site-nav { order: 3; width: 100%; }
+}
+
+/* ---------- Motion ---------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

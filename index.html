@@ -1,462 +1,391 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tap Me Studio</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Free Tap and Hold Image Maker for X — Tap Me Studio</title>
+    <meta name="description" content="Upload a picture, choose what stays hidden, and get a PNG that changes when people tap and hold it on X. Free, no signup, runs entirely in your browser.">
+    <link rel="canonical" href="https://tapmestudio.com/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="Free Tap and Hold Image Maker for X">
+    <meta property="og:description" content="Upload a picture, choose what stays hidden, and get a PNG that changes when people tap and hold it on X. Free, no signup, runs entirely in your browser.">
+    <meta property="og:url" content="https://tapmestudio.com/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./site.css?v=1">
+    <link rel="stylesheet" href="./styles.css?v=2">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Tap Me Studio","applicationCategory":"MultimediaApplication","operatingSystem":"Web","url":"https://tapmestudio.com/","description":"Upload a picture, choose what stays hidden, and get a PNG that changes when people tap and hold it on X. Free, no signup, runs entirely in your browser.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why doesn't my image change when I tap and hold?","acceptedAnswer":{"@type":"Answer","text":"The reveal only works when X serves the original PNG instead of its compressed copy. That fails for three common reasons: the file is over 5 MB, the long side is far beyond 2432 px, or the app re-encoded it because it was uploaded from a client that strips transparency. Export again at a smaller size and check the file size the editor reports before posting."}},{"@type":"Question","name":"Is this really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. No account, no watermark, no export limit, no paid tier. The site carries advertising, which is what pays for the domain and hosting."}},{"@type":"Question","name":"Are my pictures uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The file is read into a canvas element in your own browser and every pixel operation happens there. There is no upload endpoint in this app — you can watch the network tab while you work and see nothing leave."}},{"@type":"Question","name":"Does it work on Android and on desktop?","acceptedAnswer":{"@type":"Answer","text":"Making one works in any modern browser, on a phone or a computer. Viewing the effect is a different matter: it depends on the X client. The official iOS app is the most reliable. Android and the web client sometimes show the compressed copy in both states, which means no change."}}]}</script>
   </head>
-  <body>
-    <main class="app-shell">
-      <section class="creator-panel" aria-label="Input and settings">
-        <label class="drop-zone" for="sourceInput" id="sourceDrop">
-          <input id="sourceInput" type="file" accept="image/*">
-          <span class="drop-kicker">Drop or pick</span>
-          <span class="drop-title">One source image</span>
-          <span class="drop-meta" id="sourceMeta">2048px iPhone PNG-8 checker default. No settings needed.</span>
-        </label>
-
-        <section class="result-card">
-          <div>
-            <span class="label">Status</span>
-            <strong id="statusText">Ready</strong>
-          </div>
-          <div>
-            <span class="label">Output</span>
-            <strong id="outputSize">Waiting</strong>
-          </div>
-        </section>
-
-        <section class="photo-editor">
-          <div class="editor-head">
-            <span class="label">Input</span>
-            <strong>Photo Editor</strong>
-          </div>
-
-          <label class="range-row">
-            <span>
-              <strong>Brightness</strong>
-              <em id="inputBrightnessValue">0%</em>
-            </span>
-            <input id="inputBrightness" type="range" min="-60" max="60" value="0">
-          </label>
-
-          <label class="range-row">
-            <span>
-              <strong>Contrast</strong>
-              <em id="inputContrastValue">0%</em>
-            </span>
-            <input id="inputContrast" type="range" min="-60" max="80" value="0">
-          </label>
-
-          <label class="range-row">
-            <span>
-              <strong>Saturation</strong>
-              <em id="inputSaturationValue">100%</em>
-            </span>
-            <input id="inputSaturation" type="range" min="0" max="180" value="100">
-          </label>
-
-          <label class="range-row">
-            <span>
-              <strong>Exposure</strong>
-              <em id="inputExposureValue">0.0</em>
-            </span>
-            <input id="inputExposure" type="range" min="-100" max="100" value="0">
-          </label>
-
-          <label class="range-row">
-            <span>
-              <strong>Gamma</strong>
-              <em id="inputGammaValue">100%</em>
-            </span>
-            <input id="inputGamma" type="range" min="50" max="200" value="100">
-          </label>
-
-          <label class="range-row">
-            <span>
-              <strong>Hue</strong>
-              <em id="inputHueValue">0 deg</em>
-            </span>
-            <input id="inputHue" type="range" min="-180" max="180" value="0">
-          </label>
-
-          <label class="range-row">
-            <span>
-              <strong>Warmth</strong>
-              <em id="inputWarmthValue">0%</em>
-            </span>
-            <input id="inputWarmth" type="range" min="-100" max="100" value="0">
-          </label>
-
-          <label class="range-row">
-            <span>
-              <strong>Vibrance</strong>
-              <em id="inputVibranceValue">0%</em>
-            </span>
-            <input id="inputVibrance" type="range" min="-100" max="100" value="0">
-          </label>
-
-          <label class="field-row">
-            <span>Color levels</span>
-            <select id="colorLevels">
-              <option value="0" selected>Original</option>
-              <option value="3">3 per channel</option>
-              <option value="4">4 per channel</option>
-              <option value="5">5 per channel</option>
-              <option value="6">6 per channel</option>
-              <option value="8">8 per channel</option>
-              <option value="12">12 per channel</option>
-              <option value="16">16 per channel</option>
-            </select>
-          </label>
-        </section>
-
-        <section class="control-panel">
-          <section class="paint-panel" aria-label="Pattern brush">
-            <div class="editor-head">
-              <span class="label">Tools</span>
-              <strong>Pattern Brush</strong>
+  <body data-locale="en" data-other-locale="ja" data-other-url="/ja/">
+    <a class="skip-link" href="#main">Skip to the editor</a>
+    <header class="site-header">
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="./" aria-current="page">Maker</a>
+        <a href="./how-to/">How-to</a>
+        <a href="./faq/">FAQ</a>
+        <a href="./blog/">Blog</a>
+        <a href="./about/">About</a>
+      </nav>
+      <a class="lang-switch" href="./ja/" hreflang="ja" lang="ja">日本語</a>
+    </header>
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Free, no signup</p>
+          <h1><span>Tap and hold</span> image maker for X</h1>
+          <p class="lede">Upload a picture, choose what stays hidden, and download a PNG that looks blank in the X timeline and shows the full image when someone taps and holds it.</p>
+          <a class="cta" href="#main-editor">Open the editor</a>
+          <p class="hero-note">Runs in your browser. Your picture is never uploaded.</p>
+        </div>
+        
+          <figure class="demo" id="demo">
+            <div class="demo-plate" id="demoPlate" tabindex="0" role="button" aria-pressed="false"
+                 data-hidden-label="Timeline" data-held-label="Revealed">
+              <svg class="demo-art" viewBox="0 0 400 500" aria-label="Demo artwork" role="img">
+                <defs>
+                  <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#ff6a2b"/>
+                    <stop offset="0.55" stop-color="#c8324f"/>
+                    <stop offset="1" stop-color="#2b1c4a"/>
+                  </linearGradient>
+                  <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0" stop-color="#ffe6a8"/>
+                    <stop offset="1" stop-color="#ffb03a"/>
+                  </radialGradient>
+                </defs>
+                <rect width="400" height="500" fill="url(#sky)"/>
+                <circle cx="200" cy="212" r="86" fill="url(#sun)"/>
+                <path d="M0 330 L104 236 L182 316 L262 214 L400 348 L400 500 L0 500 Z" fill="#150f1c"/>
+                <path d="M0 392 L92 330 L206 404 L318 340 L400 396 L400 500 L0 500 Z" fill="#0b0810"/>
+                <g fill="#150f1c">
+                  <circle cx="120" cy="150" r="5"/><circle cx="286" cy="128" r="7"/><circle cx="322" cy="176" r="4"/>
+                </g>
+              </svg>
+              <span class="demo-screen" aria-hidden="true"></span>
+              <span class="demo-hold" aria-hidden="true">Hold to reveal</span>
             </div>
+            <figcaption class="demo-caption">
+              <span class="demo-state" id="demoState"></span>
+            </figcaption>
+          </figure>
+      </section>
 
-            <label class="toggle-row">
-              <span>
-                <strong>Paint on image</strong>
-                <small>Draw pattern overrides directly on the fullview canvas.</small>
+      <section class="section" id="main-editor">
+        <div class="section-head">
+          <span class="eyebrow">Editor</span>
+          <h2>Make your image</h2>
+        </div>
+        
+        <div class="app-shell">
+          <header class="topbar">
+            <div class="readout" aria-label="Render status">
+              <span class="readout-cell">
+                <span class="readout-key">Status</span>
+                <strong id="statusText">Drop an image to start</strong>
               </span>
-              <input id="paintMode" type="checkbox">
-            </label>
-
-            <label class="field-row">
-              <span>Brush pattern</span>
-              <select id="brushPattern">
-                <option value="solid" selected>Solid</option>
-                <option value="templateSlash8">PSD disappearing slash</option>
-                <option value="templateCross4">PSD disappearing cross</option>
-                <option value="templateDots20">PSD preview dots</option>
-                <option value="bayer">Bayer 4x4</option>
-                <option value="checker">Checker</option>
-                <option value="microdots">Micro dots</option>
-                <option value="slash">Diagonal /</option>
-                <option value="backslash">Diagonal \</option>
-                <option value="plus">Plus grid</option>
-                <option value="diamonds">Diamond dots</option>
-                <option value="lattice">Lattice</option>
-                <option value="crosshatch">Crosshatch</option>
-                <option value="erase">Erase override</option>
-              </select>
-            </label>
-
-            <label class="range-row">
-              <span>
-                <strong>Brush size</strong>
-                <em id="brushSizeValue">48px</em>
+              <span class="readout-cell">
+                <span class="readout-key">Output</span>
+                <strong id="outputSize">Waiting</strong>
               </span>
-              <input id="brushSize" type="range" min="8" max="220" value="48">
-            </label>
+            </div>
+            <div class="action-row">
+              <button class="secondary-button" id="resetButton" type="button">Reset</button>
+              <button class="primary-button" id="downloadButton" type="button" disabled>Download PNG</button>
+            </div>
+          </header>
 
-            <button class="mini-button" id="clearPaint" type="button">Clear paint</button>
+          <section class="creator-panel" aria-label="Output">
+            <section class="module">
+              <div class="module-head"><span class="eyebrow">01</span><h3>Pick a mode</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <div class="module-body">
+                <div class="tabs" role="tablist">
+                  <button class="tab is-active" id="modeHide" type="button" role="tab" aria-selected="true">Hide &amp; reveal</button>
+                  <button class="tab" id="modeSwap" type="button" role="tab" aria-selected="false">Two-image swap</button>
+                </div>
+                <label class="drop-zone" for="sourceInput" id="sourceDrop">
+                  <input id="sourceInput" type="file" accept="image/*">
+                  <span class="drop-mark" aria-hidden="true"></span>
+                  <span class="drop-title" id="sourceTitle">Drop an image</span>
+                  <span class="drop-meta" id="sourceMeta">PNG or JPG. Nothing leaves your device.</span>
+                </label>
+                <label class="drop-zone" for="secondInput" id="secondDrop" hidden>
+                  <input id="secondInput" type="file" accept="image/*">
+                  <span class="drop-mark" aria-hidden="true"></span>
+                  <span class="drop-title">Drop the reveal image</span>
+                  <span class="drop-meta" id="secondMeta">The picture the tap uncovers.</span>
+                </label>
+                <p class="hint" id="modeHint">One picture hides in the timeline and comes back when someone taps and holds it.</p>
+              </div>
+            </section>
+
+            <section class="module" id="visibilityModule">
+              <div class="module-head"><span class="eyebrow">02</span><h3>What stays visible</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <div class="module-body">
+                <div class="choice-group" role="radiogroup" aria-label="What stays visible">
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="none" checked>
+                    <span><strong>Hide everything</strong><small>The timeline shows an almost blank frame.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="dark">
+                    <span><strong>Keep dark parts visible</strong><small>Shadows and outlines survive as a teaser.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="object">
+                    <span><strong>Mark objects</strong><small>Click an object and it is selected along its edges, then stays visible.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="visibility" value="paint">
+                    <span><strong>Paint by hand</strong><small>Brush the areas that stay in the thumbnail.</small></span>
+                  </label>
+                </div>
+                <label class="range-row" id="thresholdRow" hidden>
+                  <span><strong>Brightness cutoff</strong><em id="thresholdValue">150</em></span>
+                  <input id="threshold" type="range" min="40" max="240" value="150">
+                </label>
+
+                <div class="paint-tools" id="objectTools" hidden>
+                  <label class="range-row">
+                    <span><strong>Tolerance</strong><em id="toleranceValue">34</em></span>
+                    <input id="tolerance" type="range" min="6" max="90" value="34">
+                    <small class="range-note">How much colour variation a selection accepts. Alt-click to unmark.</small>
+                  </label>
+                  <div class="pattern-actions">
+                    <button class="mini-button" id="markAdd" type="button" aria-pressed="true">Mark</button>
+                    <button class="mini-button" id="markRemove" type="button" aria-pressed="false">Unmark</button>
+                  </div>
+                  <button class="mini-button mini-button-wide" id="clearMarks" type="button">Clear marks</button>
+                </div>
+
+                <div class="paint-tools" id="paintTools" hidden>
+                  <label class="range-row">
+                    <span><strong>Brush size</strong><em id="brushSizeValue">64px</em></span>
+                    <input id="brushSize" type="range" min="8" max="240" value="64">
+                  </label>
+                  <div class="pattern-actions">
+                    <button class="mini-button" id="brushKeep" type="button" aria-pressed="true">Keep visible</button>
+                    <button class="mini-button" id="brushHide" type="button" aria-pressed="false">Hide again</button>
+                  </div>
+                  <button class="mini-button mini-button-wide" id="clearPaint" type="button">Clear painting</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="module">
+              <div class="module-head"><span class="eyebrow">03</span><h3>Output</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <div class="module-body">
+                <label class="field-row">
+                  <span>Size</span>
+                  <select id="outputRatio">
+                    <option value="auto" selected>Auto — original ratio</option>
+                    <option value="1:1">1:1 — 2432 x 2432</option>
+                    <option value="2:3">2:3 — 1664 x 2432</option>
+                    <option value="4:5">4:5 — 1946 x 2432</option>
+                    <option value="9:16">9:16 — 1368 x 2432</option>
+                    <option value="16:9">16:9 — 2432 x 1368</option>
+                    <option value="3:2">3:2 — 2432 x 1621</option>
+                  </select>
+                </label>
+                <label class="range-row">
+                  <span><strong>Deepen blacks</strong><em id="blackPointValue">0</em></span>
+                  <input id="blackPoint" type="range" min="0" max="90" value="0">
+                  <small class="range-note">Crushes shadows toward true black before the trick runs. This is what makes tones vanish on a dark-mode timeline.</small>
+                </label>
+
+                <label class="toggle-row">
+                  <span><strong>Upscale for hi-res load</strong><small>Recommended. Pushes X to serve the original file on tap.</small></span>
+                  <input id="upscale" type="checkbox" checked>
+                </label>
+                <label class="toggle-row">
+                  <span><strong>Auto line-art teaser</strong><small>Keeps the strongest edges readable in the timeline.</small></span>
+                  <input id="lineArt" type="checkbox">
+                </label>
+                <label class="toggle-row">
+                  <span><strong>Brightness boost</strong><small>Lifts the reveal so it reads on a dark backdrop.</small></span>
+                  <input id="brightnessBoost" type="checkbox">
+                </label>
+              </div>
+            </section>
+
+            <section class="module">
+              <div class="module-head"><span class="eyebrow">!</span><h3>Before you post</h3></div>
+              <div class="rule" aria-hidden="true"></div>
+              <p class="hint">The reveal needs X to serve the original PNG, so keep the file under 5&nbsp;MB. Post it once from a private account first — X changes its image pipeline without warning.</p>
+            </section>
           </section>
 
-          <div class="advanced-launcher">
-            <label class="toggle-row">
-              <span>
-                <strong>Advanced mode</strong>
-                <small>Show prompt, pattern, and compression controls.</small>
-              </span>
-              <input id="advancedToggle" type="checkbox">
-            </label>
-            <button class="mini-button" id="advancedOpenButton" type="button">Open</button>
-          </div>
-
-          <div class="advanced-panel" id="advancedPanel" hidden>
-            <div class="advanced-head">
-              <div>
-                <span class="label">Advanced</span>
-                <strong>Pattern Lab</strong>
+          <section class="simulator-panel" aria-label="Preview">
+            <div class="sim-header">
+              <div class="sim-title"><span id="renderBadge">No image loaded</span></div>
+              <div class="canvas-toolbar">
+                <button class="tool-button" id="timelineToggle" type="button">Hide timeline</button>
+                <span class="toolbar-sep" aria-hidden="true"></span>
+                <button class="icon-button" id="canvasZoomOut" type="button" aria-label="Zoom out">&minus;</button>
+                <input id="canvasZoom" type="range" min="25" max="400" value="100" aria-label="Zoom">
+                <span class="zoom-readout" id="canvasZoomValue">100%</span>
+                <button class="icon-button" id="canvasZoomIn" type="button" aria-label="Zoom in">+</button>
+                <button class="tool-button" id="canvasZoomReset" type="button">Fit</button>
               </div>
-              <button class="mini-button" id="advancedMinimize" type="button">Minimize</button>
             </div>
-
-            <label class="field-row">
-              <span>Reveal method</span>
-              <select id="revealMethod">
-                <option value="iosAlpha" selected>iPhone PNG-8 checker</option>
-                <option value="darkAlpha">Alpha-0 color carrier</option>
-                <option value="templateMatte">iPhone-safe white matte</option>
-                <option value="template">Web alpha cheat-sheet</option>
-                <option value="compression">Experimental RGB pixel pattern</option>
-                <option value="carrierSoft">Soft alpha carrier</option>
-                <option value="carrier">Alpha carrier 0</option>
-                <option value="alpha">Transparent matte</option>
-              </select>
-            </label>
-
-            <label class="toggle-row">
-              <span>
-                <strong>White background layer</strong>
-                <small>Add a white layer behind tone gaps.</small>
-              </span>
-              <input id="backgroundToggle" type="checkbox">
-            </label>
-
-            <label class="range-row" id="backgroundOpacityRow">
-              <span>
-                <strong>Background opacity</strong>
-                <em id="backgroundOpacityValue">100%</em>
-              </span>
-              <input id="backgroundOpacity" type="range" min="0" max="100" value="100" disabled>
-            </label>
-
-            <label class="range-row matte-row">
-              <span>
-                <strong>White matte</strong>
-                <em id="whiteMatteValue">88%</em>
-              </span>
-              <input id="whiteMatte" type="range" min="0" max="100" value="88">
-            </label>
-
-            <label class="range-row matte-row">
-              <span>
-                <strong>Hidden color strength</strong>
-                <em id="matteColorStrengthValue">115%</em>
-              </span>
-              <input id="matteColorStrength" type="range" min="0" max="200" value="115">
-            </label>
-
-            <label class="range-row matte-row">
-              <span>
-                <strong>Hidden color opacity</strong>
-                <em id="hiddenColorOpacityValue">100%</em>
-              </span>
-              <input id="hiddenColorOpacity" type="range" min="0" max="100" value="100">
-            </label>
-
-            <div class="advanced-subhead">
-              <span class="label">Prompt</span>
-              <strong>Tap Me Editor</strong>
+            <div class="preview-grid">
+              <article class="preview-card is-hidden-state">
+                <header class="preview-title">
+                  <span class="state-dot" aria-hidden="true"></span>
+                  <div class="preview-title-text">
+                    <span class="eyebrow">Timeline</span><strong>What X shows</strong>
+                  </div>
+                  <div class="ground-toggle" role="group" aria-label="Timeline background">
+                    <button type="button" id="themeLight" class="ground-button is-active" aria-pressed="true">Light</button>
+                    <button type="button" id="themeDark" class="ground-button" aria-pressed="false">Dark</button>
+                  </div>
+                </header>
+                <div class="image-stage preview-stage" id="timelineFrame">
+                  <canvas id="timelineCanvas" width="680" height="425"></canvas>
+                </div>
+              </article>
+              <article class="preview-card is-revealed-state">
+                <header class="preview-title">
+                  <span class="state-dot" aria-hidden="true"></span>
+                  <div class="preview-title-text">
+                    <span class="eyebrow">Full view</span><strong>What the tap reveals</strong>
+                  </div>
+                </header>
+                <div class="image-stage expanded-stage" id="openedStage">
+                  <div class="canvas-wrap">
+                    <canvas id="openedCanvas" width="900" height="1125"></canvas>
+                    <canvas id="paintOverlayCanvas" class="paint-overlay" width="900" height="1125" aria-hidden="true"></canvas>
+                  </div>
+                </div>
+              </article>
             </div>
-
-            <label class="field-row prompt-wide">
-              <span>Text</span>
-              <input id="promptText" type="text" maxlength="42" value="TAP ME">
-            </label>
-
-            <label class="field-row">
-              <span>Symbols</span>
-              <input id="promptSymbols" type="text" maxlength="24" placeholder="*, +, <3">
-            </label>
-
-            <label class="field-row">
-              <span>Font</span>
-              <select id="promptFont">
-                <option value="arial" selected>Arial Black style</option>
-                <option value="impact">Impact</option>
-                <option value="comic">Comic Sans</option>
-                <option value="trebuchet">Trebuchet</option>
-                <option value="verdana">Verdana</option>
-                <option value="tahoma">Tahoma</option>
-                <option value="segoe">Segoe UI</option>
-                <option value="franklin">Franklin Gothic</option>
-                <option value="rockwell">Rockwell</option>
-                <option value="palatino">Palatino</option>
-                <option value="brush">Brush Script</option>
-                <option value="lucida">Lucida Handwriting</option>
-                <option value="georgia">Georgia</option>
-                <option value="courier">Courier</option>
-                <option value="consolas">Consolas</option>
-                <option value="narrow">Arial Narrow</option>
-                <option value="system">System</option>
-              </select>
-            </label>
-
-            <label class="field-row">
-              <span>Text style</span>
-              <select id="promptStyle">
-                <option value="sticker" selected>Sticker</option>
-                <option value="bubble">Bubble</option>
-                <option value="hollow">Hollow</option>
-                <option value="invert">Invert</option>
-                <option value="heavy">Heavy outline</option>
-                <option value="shadow">Drop shadow</option>
-                <option value="clean">Clean black</option>
-                <option value="white">Clean white</option>
-              </select>
-            </label>
-
-            <label class="toggle-row">
-              <span>
-                <strong>Arrow</strong>
-                <small>Show the solid tap arrow.</small>
-              </span>
-              <input id="promptArrow" type="checkbox" checked>
-            </label>
-
-            <label class="field-row">
-              <span>Arrow style</span>
-              <select id="promptArrowStyle">
-                <option value="left" selected>Left arrow</option>
-                <option value="right">Right arrow</option>
-                <option value="up">Up arrow</option>
-                <option value="down">Down arrow</option>
-                <option value="double">Double arrow</option>
-                <option value="chevron">Chevron</option>
-              </select>
-            </label>
-
-            <label class="range-row">
-              <span>
-                <strong>Prompt X</strong>
-                <em id="promptXValue">76%</em>
-              </span>
-              <input id="promptX" type="range" min="2" max="98" value="76">
-            </label>
-
-            <label class="range-row">
-              <span>
-                <strong>Prompt Y</strong>
-                <em id="promptYValue">18%</em>
-              </span>
-              <input id="promptY" type="range" min="2" max="98" value="18">
-            </label>
-
-            <label class="range-row">
-              <span>
-                <strong>Prompt scale</strong>
-                <em id="promptScaleValue">100%</em>
-              </span>
-              <input id="promptScale" type="range" min="35" max="220" value="100">
-            </label>
-
-            <label class="range-row">
-              <span>
-                <strong>Prompt rotation</strong>
-                <em id="promptRotationValue">0 deg</em>
-              </span>
-              <input id="promptRotation" type="range" min="-45" max="45" value="0">
-            </label>
-
-            <label class="field-row">
-              <span>Output long side</span>
-              <select id="outputSide">
-                <option value="1600">1600 px</option>
-                <option value="2048" selected>2048 px</option>
-                <option value="3000">3000 px</option>
-                <option value="3072">3072 px</option>
-                <option value="3600">3600 px</option>
-                <option value="4096">4096 px</option>
-                <option value="4608">4608 px experimental</option>
-                <option value="5120">5120 px experimental</option>
-                <option value="6144">6144 px experimental</option>
-              </select>
-            </label>
-
-            <label class="range-row">
-              <span>
-                <strong>Ink solid cutoff</strong>
-                <em id="inkThresholdValue">17%</em>
-              </span>
-              <input id="inkThreshold" type="range" min="5" max="45" value="17">
-            </label>
-
-            <label class="range-row">
-              <span>
-                <strong>Pattern scale</strong>
-                <em id="patternScaleValue">1x</em>
-              </span>
-              <input id="patternScale" type="range" min="1" max="3" value="1">
-            </label>
-
-            <div class="pattern-actions">
-              <button class="mini-button" id="randomizePatterns" type="button">Randomize patterns</button>
-              <button class="mini-button" id="resetPatterns" type="button">Reset patterns</button>
-            </div>
-
-            <label class="range-row">
-              <span>
-                <strong>Timeline compression</strong>
-                <em id="previewCrushValue">68%</em>
-              </span>
-              <input id="previewCrush" type="range" min="0" max="100" value="68">
-            </label>
-
-            <div class="pattern-grid" id="patternControls" aria-label="Color pattern controls"></div>
-          </div>
-        </section>
-
-        <section class="quiet-notes">
-          <h2>Automatic Method</h2>
-          <p>The default export follows the working iPhone PNG-8 pattern: a white transparent checker hides the image in the timeline, while full view keeps a pale dithered color reveal.</p>
-        </section>
+          </section>
+        </div>
       </section>
 
-      <section class="simulator-panel" aria-label="Preview comparison">
-        <div class="sim-header">
-          <div class="sim-title">
-            <p class="eyebrow">Preview test</p>
-            <span id="renderBadge">No image</span>
-          </div>
-          <div class="canvas-toolbar" aria-label="Canvas controls">
-            <button class="tool-button" id="timelineToggle" type="button">Hide timeline</button>
-            <label class="toolbar-toggle">
-              <input id="canvasLock" type="checkbox" checked>
-              <span>Lock canvas</span>
-            </label>
-            <button class="icon-button" id="canvasZoomOut" type="button" aria-label="Zoom out">-</button>
-            <input id="canvasZoom" type="range" min="25" max="400" value="100" aria-label="Canvas zoom">
-            <span class="zoom-readout" id="canvasZoomValue">100%</span>
-            <button class="icon-button" id="canvasZoomIn" type="button" aria-label="Zoom in">+</button>
-            <button class="tool-button" id="canvasZoomReset" type="button">Fit</button>
-          </div>
+      <section class="section">
+        <div class="section-head">
+          <span class="eyebrow">How it works</span>
+          <h2>Three steps</h2>
         </div>
+        <ol class="steps">
+          <li>
+            <span class="step-index" aria-hidden="true">01</span>
+            <h3>Upload a picture</h3>
+            <p>Drop in a PNG or JPG. The file is processed in your browser and never sent to a server.</p>
+          </li>
+          <li>
+            <span class="step-index" aria-hidden="true">02</span>
+            <h3>Choose what stays visible</h3>
+            <p>Hide the whole image, keep the dark parts visible, or paint the areas that should stay visible in the thumbnail.</p>
+          </li>
+          <li>
+            <span class="step-index" aria-hidden="true">03</span>
+            <h3>Download and post</h3>
+            <p>Save the PNG and attach it to a post on X. Keep it under 5 MB — above that, X serves a compressed copy and the image will not change.</p>
+          </li>
+        </ol>
+        <p class="section-more"><a href="./how-to/">Read the full guide →</a></p>
+      </section>
 
-        <div class="preview-grid">
-          <article class="preview-card">
-            <header class="preview-title">
-              <span class="label">Timeline</span>
-              <strong>Compressed preview</strong>
-            </header>
-            <div class="image-stage preview-stage" id="timelineFrame">
-              <canvas id="timelineCanvas" width="900" height="1125"></canvas>
-            </div>
+      <section class="section section-alt">
+        <div class="section-head">
+          <span class="eyebrow">Details</span>
+          <h2>What this tool does differently</h2>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <h3>Accurate timeline preview</h3>
+            <p>The preview does not just scale your image down. It composites it over the feed background, resizes it the way X does, and applies JPEG compression, so the preview matches what gets posted.</p>
           </article>
-
-          <article class="preview-card">
-            <header class="preview-title">
-              <div>
-                <span class="label">Opened</span>
-                <strong>Fullview reveal</strong>
-              </div>
-            </header>
-            <div class="image-stage expanded-stage" id="openedStage">
-              <div class="canvas-wrap">
-                <canvas id="openedCanvas" width="900" height="1125"></canvas>
-                <canvas id="paintOverlayCanvas" class="paint-overlay" width="900" height="1125" aria-hidden="true"></canvas>
-              </div>
-            </div>
+          <article class="card">
+            <h3>PNG-8 export</h3>
+            <p>Exports use a 256-colour palette with a transparency chunk instead of full RGBA. Typical files are 40 to 90 KB rather than several megabytes, which keeps them under X's 5 MB limit.</p>
+          </article>
+          <article class="card">
+            <h3>Two methods</h3>
+            <p>Hide &amp; reveal uses the feed's downscaling. Two-image swap calculates per-pixel transparency so one file displays as two different images. Both are included.</p>
           </article>
         </div>
-
-        <canvas id="outputCanvas" width="900" height="1125" aria-hidden="true"></canvas>
       </section>
 
-      <section class="fullscreen-viewer" id="fullscreenViewer" hidden aria-label="Fullscreen image viewer">
-        <header class="fullscreen-toolbar">
-          <strong id="fullscreenTitle">Fullview reveal</strong>
-          <span id="fullscreenZoomValue">100%</span>
-          <button class="fullscreen-close" id="fullscreenClose" type="button" aria-label="Close fullscreen">Close</button>
-        </header>
-        <div class="fullscreen-stage" id="fullscreenStage">
-          <canvas id="fullscreenCanvas" width="900" height="1125"></canvas>
+      <section class="section">
+        <div class="section-head">
+          <span class="eyebrow">FAQ</span>
+          <h2>Common questions</h2>
         </div>
+        <div class="qa-list">
+          <details class="qa">
+            <summary>Why doesn't my image change when I tap and hold?</summary>
+            <p>The reveal only works when X serves the original PNG instead of its compressed copy. That fails for three common reasons: the file is over 5 MB, the long side is far beyond 2432 px, or the app re-encoded it because it was uploaded from a client that strips transparency. Export again at a smaller size and check the file size the editor reports before posting.</p>
+          </details>
+          <details class="qa">
+            <summary>Is this really free?</summary>
+            <p>Yes. No account, no watermark, no export limit, no paid tier. The site carries advertising, which is what pays for the domain and hosting.</p>
+          </details>
+          <details class="qa">
+            <summary>Are my pictures uploaded anywhere?</summary>
+            <p>No. The file is read into a canvas element in your own browser and every pixel operation happens there. There is no upload endpoint in this app — you can watch the network tab while you work and see nothing leave.</p>
+          </details>
+          <details class="qa">
+            <summary>Does it work on Android and on desktop?</summary>
+            <p>Making one works in any modern browser, on a phone or a computer. Viewing the effect is a different matter: it depends on the X client. The official iOS app is the most reliable. Android and the web client sometimes show the compressed copy in both states, which means no change.</p>
+          </details>
+        </div>
+        <p class="section-more"><a href="./faq/">Read every question →</a></p>
       </section>
-
-      <div class="action-row" aria-label="Export actions">
-        <button class="secondary-button" id="resetButton" type="button">Reset</button>
-        <button class="primary-button" id="downloadButton" type="button" disabled>Download PNG</button>
-      </div>
     </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>Product</h2>
+          <a href="./">Maker</a>
+          <a href="./how-to/">How-to</a>
+          <a href="./faq/">FAQ</a>
+          <a href="./blog/">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h2>Company</h2>
+          <a href="./about/">About</a>
+          <a href="./privacy/">Privacy</a>
+          <a href="./terms/">Terms</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookies</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>Contact</h2>
+          <p>Questions, bugs, or a picture that won't cooperate:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">Made for the tap-and-hold trend on X. Not affiliated with X Corp.</p>
+    </footer>
 
-    <script src="app.js?v=2026-05-08-transparent-paint-overlay"></script>
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookies</h2>
+        <p>We'd like to use cookies for traffic statistics and advertising. The image editor works either way, and your pictures never leave your device. <a href="./privacy/">Privacy policy</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">Reject non-essential</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">Accept</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="./site.js?v=1" defer></script>
+    <script src="./app.js?v=3" defer></script>
   </body>
 </html>

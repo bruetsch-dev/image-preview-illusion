@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to make a tap-and-hold image for X — Tap Me Studio</title>
+    <meta name="description" content="A step-by-step guide to building an image that hides in the X timeline and reveals itself when someone taps and holds it.">
+    <link rel="canonical" href="https://tapmestudio.com/how-to/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/how-to/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/how-to/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/how-to/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="How to make a tap-and-hold image for X">
+    <meta property="og:description" content="A step-by-step guide to building an image that hides in the X timeline and reveals itself when someone taps and holds it.">
+    <meta property="og:url" content="https://tapmestudio.com/how-to/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../site.css?v=1">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to make a tap-and-hold image for X","description":"A step-by-step guide to building an image that hides in the X timeline and reveals itself when someone taps and holds it.","step":[{"@type":"HowToStep","position":1,"name":"Upload a picture","text":"Drop in a PNG or JPG. The file is processed in your browser and never sent to a server."},{"@type":"HowToStep","position":2,"name":"Choose what stays visible","text":"Hide the whole image, keep the dark parts visible, or paint the areas that should stay visible in the thumbnail."},{"@type":"HowToStep","position":3,"name":"Download and post","text":"Save the PNG and attach it to a post on X. Keep it under 5 MB — above that, X serves a compressed copy and the image will not change."}]}</script>
+  </head>
+  <body data-locale="en" data-other-locale="ja" data-other-url="/ja/how-to/">
+    <a class="skip-link" href="#main">Skip to the editor</a>
+    <header class="site-header">
+      <a class="brand" href="../">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="../">Maker</a>
+        <a href="../how-to/" aria-current="page">How-to</a>
+        <a href="../faq/">FAQ</a>
+        <a href="../blog/">Blog</a>
+        <a href="../about/">About</a>
+      </nav>
+      <a class="lang-switch" href="../ja/how-to/" hreflang="ja" lang="ja">日本語</a>
+    </header>
+    <main id="main">
+      <article class="prose">
+        
+      <header class="page-head">
+        <h1>How to make a tap-and-hold image for X</h1>
+        
+      </header>
+        <p class="lede">The format is called 長押しで変化 in Japanese. The mechanism is straightforward: X shows two different files for the same post, and you can make those two files look like two different pictures.</p>
+        <h2>What actually happens on X</h2>
+        <p>When you attach an image to a post, X keeps your original and generates a smaller, recompressed copy for the timeline. The feed shows the copy. Tapping and holding, or opening the image, makes the client fetch the original.</p>
+        <p>Two things differ between those two views, and both are exploitable. The copy is scaled down and pushed through JPEG, which destroys anything encoded at a one-pixel scale. And the timeline composites your image over a light background while the opened view sits on black, which changes how transparency reads.</p>
+        <h2>Method one: hide and reveal</h2>
+        <p>Take one picture and make every second pixel transparent in a checkerboard. At full size you see the picture, dimmed but complete. Scaled down, each pair of pixels averages together — image plus background — and the result is close enough to the background that the frame looks empty.</p>
+        <p>This is what the Hide &amp; reveal mode does. Every pixel keeps its own colour — the checker alone does the hiding, so there is no reason to wash the picture out. A 256-colour palette is then built from the image itself, which lets the file export as PNG-8 and stay small enough for X to serve the original.</p>
+        <p>Two extra passes clean up the result. Near-white background connected to the border is made fully transparent rather than checkered, so a studio backdrop disappears instead of showing as grey haze. And in &quot;keep dark parts&quot; mode, dark regions too small to be part of the subject are dropped, because at thumbnail size they only read as noise.</p>
+        <h2>Method two: two-image swap</h2>
+        <p>This one uses transparency rather than scale. For each pixel you solve for a colour and an alpha such that compositing over white gives you picture A and compositing over black gives you picture B.</p>
+        <p>There is a catch worth knowing before you try it. Subtracting the two equations shows the composites can only ever differ by one achromatic number per pixel, so two arbitrary colour images are mathematically impossible. The solve therefore runs on brightness, which both pictures reproduce exactly, and the revealed image keeps its own colour on top. Choose a light picture for the timeline and a dark one for the reveal.</p>
+        
+        <h2>Getting it to actually work</h2>
+        <p>Keep the export under 5 MB. This is the single most common failure. Above it, X stops serving your original and both views show the same compressed copy.</p>
+        <p>Post from the official app or the web uploader. Some third-party clients re-encode images and strip the alpha channel, which removes the effect before it ever reaches X.</p>
+        <p>Test from a private account first. Every tool in this category depends on undocumented behaviour that can change overnight.</p>
+        <h2>Ideas that work well</h2>
+        <p>Artwork reveals, where the timeline shows a blank canvas and the hold shows the finished piece. Jokes, where the setup is visible and the punchline is hidden. Before-and-after comparisons, which work better with two-image swap than with the dither method.</p>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>Product</h2>
+          <a href="../">Maker</a>
+          <a href="../how-to/">How-to</a>
+          <a href="../faq/">FAQ</a>
+          <a href="../blog/">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h2>Company</h2>
+          <a href="../about/">About</a>
+          <a href="../privacy/">Privacy</a>
+          <a href="../terms/">Terms</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookies</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>Contact</h2>
+          <p>Questions, bugs, or a picture that won't cooperate:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">Made for the tap-and-hold trend on X. Not affiliated with X Corp.</p>
+    </footer>
+
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookies</h2>
+        <p>We'd like to use cookies for traffic statistics and advertising. The image editor works either way, and your pictures never leave your device. <a href="../privacy/">Privacy policy</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">Reject non-essential</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">Accept</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="../site.js?v=1" defer></script>
+  </body>
+</html>
