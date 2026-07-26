@@ -1,0 +1,49 @@
+.pre-editor-container {
+  margin-top: 2rem;
+  background: var(--bg-elevated, #2a2522);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.pre-editor-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.pre-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  background: var(--bg-inset, #1a1512);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.pre-editor-toolbar .range-row,
+.pre-editor-toolbar .field-row {
+  margin: 0;
+  flex: 1 1 200px;
+}
+
+.pre-editor-canvas-container {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border, #3a3532);
+}
+
+.pre-editor-canvas-container canvas {
+  max-width: 100%;
+  max-height: 600px;
+  cursor: crosshair;
+  touch-action: none;
+}

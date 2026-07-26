@@ -84,6 +84,7 @@ function header(locale, path) {
   const t = UI[locale];
   const nav = [
     ["", t.nav.home],
+    ["editor", t.nav.editor],
     ["how-to", t.nav.howto],
     ["faq", t.nav.faq],
     ["blog", t.nav.blog],

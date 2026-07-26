@@ -5,6 +5,10 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://tapmestudio.com/editor/</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://tapmestudio.com/how-to/</loc>
     <changefreq>weekly</changefreq>
   </url>
@@ -34,6 +38,10 @@
   </url>
   <url>
     <loc>https://tapmestudio.com/ja/</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://tapmestudio.com/ja/editor/</loc>
     <changefreq>weekly</changefreq>
   </url>
   <url>

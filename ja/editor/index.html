@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>エディター — Tap Me Studio</title>
+    <meta name="description" content="画像を前処理します：TapMe Studioメーカーを使用する前に、クロップ、サイズ変更、明るさの調整を行います。">
+    <link rel="canonical" href="https://tapmestudio.com/ja/editor/">
+    <link rel="alternate" hreflang="en" href="https://tapmestudio.com/editor/">
+    <link rel="alternate" hreflang="ja" href="https://tapmestudio.com/ja/editor/">
+    <link rel="alternate" hreflang="x-default" href="https://tapmestudio.com/editor/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tap Me Studio">
+    <meta property="og:title" content="エディター">
+    <meta property="og:description" content="画像を前処理します：TapMe Studioメーカーを使用する前に、クロップ、サイズ変更、明るさの調整を行います。">
+    <meta property="og:url" content="https://tapmestudio.com/ja/editor/">
+    <meta property="og:image" content="https://tapmestudio.com/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../site.css?v=1">
+    <link rel="stylesheet" href="../../editor.css?v=1">
+  </head>
+  <body data-locale="ja" data-other-locale="en" data-other-url="/editor/">
+    <a class="skip-link" href="#main">エディターへ移動</a>
+    <header class="site-header">
+      <a class="brand" href="../../ja/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Tap&nbsp;Me<em>Studio</em></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="../../ja/">作成</a>
+        <a href="../../ja/editor/" aria-current="page">エディター</a>
+        <a href="../../ja/how-to/">使い方</a>
+        <a href="../../ja/faq/">よくある質問</a>
+        <a href="../../ja/blog/">ブログ</a>
+        <a href="../../ja/about/">運営者</a>
+      </nav>
+      <a class="lang-switch" href="../../editor/" hreflang="en" lang="en">English</a>
+    </header>
+    <main id="main">
+      <article class="prose">
+        <header class="page-head">
+          <h1>エディター</h1>
+          <p class="lede">画像を前処理します：TapMe Studioメーカーを使用する前に、クロップ、サイズ変更、明るさの調整を行います。</p>
+        </header>
+        
+        <div class="pre-editor-container">
+          <label class="drop-zone" for="preEditorInput" id="preEditorDrop">
+            <input id="preEditorInput" type="file" accept="image/*">
+            <span class="drop-mark" aria-hidden="true"></span>
+            <span class="drop-title">編集する画像をドロップ</span>
+            <span class="drop-meta">PNG または JPG。端末から送信されません。</span>
+          </label>
+          
+          <div id="preEditorWorkspace" class="pre-editor-workspace" hidden>
+            <div class="pre-editor-toolbar">
+              <label class="range-row">
+                <span><strong>明るさ</strong> <em id="peBrightnessValue">1.0</em></span>
+                <input id="peBrightness" type="range" min="0.1" max="3.0" step="0.1" value="1.0">
+              </label>
+              
+              <label class="field-row">
+                <span>クロップ / アスペクト比</span>
+                <select id="peAspectRatio">
+                  <option value="free">フリームーブ</option>
+                  <option value="0.75" selected>3:4 (1536 x 2048)</option>
+                  <option value="1">1:1 (2432 x 2432)</option>
+                  <option value="0.6842">2:3 (1664 x 2432)</option>
+                  <option value="0.8">4:5 (1946 x 2432)</option>
+                  <option value="0.5625">9:16 (1368 x 2432)</option>
+                  <option value="1.7777">16:9 (2432 x 1368)</option>
+                  <option value="1.5">3:2 (2432 x 1621)</option>
+                </select>
+              </label>
+
+              <label class="field-row">
+                <span>出力幅</span>
+                <input id="peOutputWidth" type="number" value="1536" min="100" max="4000">
+              </label>
+              <label class="field-row">
+                <span>出力高さ</span>
+                <input id="peOutputHeight" type="number" value="2048" min="100" max="4000">
+              </label>
+            </div>
+            
+            <div class="pre-editor-canvas-container" id="peCanvasContainer">
+              <canvas id="peCanvas"></canvas>
+            </div>
+            
+            <div class="action-row">
+              <button class="secondary-button" id="peResetBtn" type="button">エディター リセット</button>
+              <button class="primary-button" id="peDownloadBtn" type="button">結果をダウンロード</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2>プロダクト</h2>
+          <a href="../../ja/">作成</a>
+          <a href="../../ja/how-to/">使い方</a>
+          <a href="../../ja/faq/">よくある質問</a>
+          <a href="../../ja/blog/">ブログ</a>
+        </div>
+        <div class="footer-col">
+          <h2>運営情報</h2>
+          <a href="../../ja/about/">運営者</a>
+          <a href="../../ja/privacy/">プライバシー</a>
+          <a href="../../ja/terms/">利用規約</a>
+          <button type="button" class="link-button" data-consent-reopen>Cookie について</button>
+        </div>
+        <div class="footer-col footer-contact">
+          <h2>お問い合わせ</h2>
+          <p>ご質問・不具合・うまくいかない画像について:</p>
+          <a href="mailto:hello@tapmestudio.com">hello@tapmestudio.com</a>
+        </div>
+      </div>
+      <p class="footer-note">X の「長押しで変化」トレンド向けに作りました。X Corp. とは無関係です。</p>
+    </footer>
+
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="consentTitle">
+      <div class="consent-body">
+        <h2 id="consentTitle">Cookie について</h2>
+        <p>アクセス解析と広告のために Cookie を使用したいと考えています。どちらを選んでもエディターは通常どおり動作し、画像が端末から送信されることはありません。 <a href="../../ja/privacy/">プライバシーポリシー</a></p>
+      </div>
+      <div class="consent-actions">
+        <button type="button" class="mini-button" data-consent="reject">必須のみ</button>
+        <button type="button" class="mini-button mini-button-accent" data-consent="accept">同意する</button>
+      </div>
+    </div>
+    <script>window.__TMS__ = {"adsClient":"","analyticsId":""};</script>
+    <script src="../../site.js?v=1" defer></script>
+    <script src="../../editor.js?v=1" defer></script>
+  </body>
+</html>

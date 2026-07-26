@@ -24,7 +24,7 @@ export const UI = {
     langName: "English",
     otherLangName: "日本語",
     skip: "Skip to the editor",
-    nav: { home: "Maker", howto: "How-to", faq: "FAQ", blog: "Blog", about: "About" },
+    nav: { home: "Maker", editor: "Editor", howto: "How-to", faq: "FAQ", blog: "Blog", about: "About" },
     footer: {
       product: "Product",
       company: "Company",
@@ -48,7 +48,7 @@ export const UI = {
     langName: "日本語",
     otherLangName: "English",
     skip: "エディターへ移動",
-    nav: { home: "作成", howto: "使い方", faq: "よくある質問", blog: "ブログ", about: "運営者" },
+    nav: { home: "作成", editor: "エディター", howto: "使い方", faq: "よくある質問", blog: "ブログ", about: "運営者" },
     footer: {
       product: "プロダクト",
       company: "運営情報",

@@ -768,12 +768,91 @@ Sitemap: ${SITE.domain}/sitemap.xml
 
 /* ---------- run ---------------------------------------------------------- */
 
+function editorPage(locale) {
+  const t = UI[locale];
+  
+  // Minimal translations for the editor page
+  const title = t.nav.editor;
+  const description = locale === "en" 
+    ? "Pre-process your image: crop, resize, and adjust brightness before using the TapMe Studio maker."
+    : "画像を前処理します：TapMe Studioメーカーを使用する前に、クロップ、サイズ変更、明るさの調整を行います。";
+    
+  const body = `
+      <article class="prose">
+        <header class="page-head">
+          <h1>${esc(title)}</h1>
+          <p class="lede">${esc(description)}</p>
+        </header>
+        
+        <div class="pre-editor-container">
+          <label class="drop-zone" for="preEditorInput" id="preEditorDrop">
+            <input id="preEditorInput" type="file" accept="image/*">
+            <span class="drop-mark" aria-hidden="true"></span>
+            <span class="drop-title">${locale === "en" ? "Drop an image to edit" : "編集する画像をドロップ"}</span>
+            <span class="drop-meta">${locale === "en" ? "PNG or JPG. Nothing leaves your device." : "PNG または JPG。端末から送信されません。"}</span>
+          </label>
+          
+          <div id="preEditorWorkspace" class="pre-editor-workspace" hidden>
+            <div class="pre-editor-toolbar">
+              <label class="range-row">
+                <span><strong>${locale === "en" ? "Brightness" : "明るさ"}</strong> <em id="peBrightnessValue">1.0</em></span>
+                <input id="peBrightness" type="range" min="0.1" max="3.0" step="0.1" value="1.0">
+              </label>
+              
+              <label class="field-row">
+                <span>${locale === "en" ? "Target Crop / Aspect Ratio" : "クロップ / アスペクト比"}</span>
+                <select id="peAspectRatio">
+                  <option value="free">${locale === "en" ? "Free Crop" : "フリームーブ"}</option>
+                  <option value="0.75" selected>3:4 (1536 x 2048)</option>
+                  <option value="1">1:1 (2432 x 2432)</option>
+                  <option value="0.6842">2:3 (1664 x 2432)</option>
+                  <option value="0.8">4:5 (1946 x 2432)</option>
+                  <option value="0.5625">9:16 (1368 x 2432)</option>
+                  <option value="1.7777">16:9 (2432 x 1368)</option>
+                  <option value="1.5">3:2 (2432 x 1621)</option>
+                </select>
+              </label>
+
+              <label class="field-row">
+                <span>${locale === "en" ? "Output Width" : "出力幅"}</span>
+                <input id="peOutputWidth" type="number" value="1536" min="100" max="4000">
+              </label>
+              <label class="field-row">
+                <span>${locale === "en" ? "Output Height" : "出力高さ"}</span>
+                <input id="peOutputHeight" type="number" value="2048" min="100" max="4000">
+              </label>
+            </div>
+            
+            <div class="pre-editor-canvas-container" id="peCanvasContainer">
+              <canvas id="peCanvas"></canvas>
+            </div>
+            
+            <div class="action-row">
+              <button class="secondary-button" id="peResetBtn" type="button">${t.nav.editor} ${locale === "en" ? "Reset" : "リセット"}</button>
+              <button class="primary-button" id="peDownloadBtn" type="button">${locale === "en" ? "Download Result" : "結果をダウンロード"}</button>
+            </div>
+          </div>
+        </div>
+      </article>`;
+
+  return page({
+    locale,
+    path: "editor",
+    title,
+    description,
+    body,
+    extraCss: "editor.css?v=1",
+    extraJs: "editor.js?v=1"
+  });
+}
+
 const written = [];
 
 for (const locale of LOCALES) {
   if (locale !== "en" && existsSync(join(ROOT, locale))) rmSync(join(ROOT, locale), { recursive: true, force: true });
 
   written.push(emit(locale, "", homePage(locale)));
+  written.push(emit(locale, "editor", editorPage(locale)));
   written.push(
     emit(
       locale,
