@@ -881,6 +881,7 @@
     palette.push([255, 255, 255]);
 
     const scanlines = new Uint8Array((w + 1) * h);
+    let hasTransparent = false;
     for (let y = 0; y < h; y += 1) {
       const row = y * (w + 1);
       scanlines[row] = 0;
@@ -888,6 +889,7 @@
         const i = (y * w + x) * 4;
         if (data[i + 3] === 0) {
           scanlines[row + x + 1] = transparentIndex;
+          hasTransparent = true;
           continue;
         }
         const key = ((data[i] >> 3) << 10) | ((data[i + 1] >> 3) << 5) | (data[i + 2] >> 3);
@@ -917,17 +919,23 @@
     const alpha = new Uint8Array(palette.length).fill(255);
     alpha[transparentIndex] = 0;
 
+    const chunks = [
+      new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]),
+      pngChunk("IHDR", ihdr),
+      pngChunk("PLTE", plte)
+    ];
+
+    if (hasTransparent) {
+      chunks.push(pngChunk("tRNS", alpha));
+    }
+
+    chunks.push(
+      pngChunk("IDAT", compressed),
+      pngChunk("IEND", new Uint8Array(0))
+    );
+
     return new Blob(
-      [
-        concatBytes([
-          new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]),
-          pngChunk("IHDR", ihdr),
-          pngChunk("PLTE", plte),
-          pngChunk("tRNS", alpha),
-          pngChunk("IDAT", compressed),
-          pngChunk("IEND", new Uint8Array(0))
-        ])
-      ],
+      [concatBytes(chunks)],
       { type: "image/png" }
     );
   }
