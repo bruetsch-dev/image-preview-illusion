@@ -23,12 +23,14 @@ function editor(locale) {
     ? {
         mode: "モードを選ぶ",
         hide: "隠して見せる",
+        solid: "ソリッドモアレ (Solid Moiré)",
         swap: "2 枚入れ替え",
         drop: "画像をドロップ",
         dropMeta: "PNG または JPG。端末から送信されません。",
         dropB: "現れる画像をドロップ",
         dropBMeta: "長押しで現れる画像です。",
         hint: "1 枚の画像がタイムラインでは隠れ、長押しすると戻ります。",
+        hintSolid: "透明度を使わず、ピクセルパターンを用いてタイムライン上で画像を単色のグレーのブロックとして隠します。",
         visible: "見せる部分",
         vNone: "すべて隠す",
         vNoneS: "タイムラインではほぼ空白になります。",
@@ -46,6 +48,8 @@ function editor(locale) {
         clearMarks: "選択を消去",
         blackPoint: "黒を締める",
         blackPointS: "トリックの前に暗部を黒に寄せます。ダークモードのタイムラインで効きます。",
+        moireContrast: "モアレのコントラスト",
+        moireContrastS: "コントラストを下げると、パターンがより自然に見えAI検知を回避しやすくなりますが、読みづらくなります。",
         groundLabel: "タイムラインの背景",
         groundLight: "ライト",
         groundDark: "ダーク",
@@ -82,12 +86,14 @@ function editor(locale) {
     : {
         mode: "Pick a mode",
         hide: "Hide &amp; reveal",
+        solid: "Solid Moiré",
         swap: "Two-image swap",
         drop: "Drop an image",
         dropMeta: "PNG or JPG. Nothing leaves your device.",
         dropB: "Drop the reveal image",
         dropBMeta: "The picture the tap uncovers.",
         hint: "One picture hides in the timeline and comes back when someone taps and holds it.",
+        hintSolid: "The image hides as a solid gray block in the timeline using a pixel pattern, requiring no transparency.",
         visible: "What stays visible",
         vNone: "Hide everything",
         vNoneS: "The timeline shows an almost blank frame.",
@@ -105,6 +111,8 @@ function editor(locale) {
         clearMarks: "Clear marks",
         blackPoint: "Deepen blacks",
         blackPointS: "Crushes shadows toward true black before the trick runs. This is what makes tones vanish on a dark-mode timeline.",
+        moireContrast: "Moiré Pattern Contrast",
+        moireContrastS: "Low contrast makes the pattern look more natural to avoid AI detection, but harder to read.",
         groundLabel: "Timeline background",
         groundLight: "Light",
         groundDark: "Dark",
@@ -165,6 +173,7 @@ function editor(locale) {
               <div class="module-body">
                 <div class="tabs" role="tablist">
                   <button class="tab is-active" id="modeHide" type="button" role="tab" aria-selected="true">${T.hide}</button>
+                  <button class="tab" id="modeSolid" type="button" role="tab" aria-selected="false">${T.solid}</button>
                   <button class="tab" id="modeSwap" type="button" role="tab" aria-selected="false">${T.swap}</button>
                 </div>
                 <label class="drop-zone" for="sourceInput" id="sourceDrop">
@@ -180,6 +189,7 @@ function editor(locale) {
                   <span class="drop-meta" id="secondMeta">${T.dropBMeta}</span>
                 </label>
                 <p class="hint" id="modeHint">${T.hint}</p>
+                <p class="hint" id="modeSolidHint" hidden>${T.hintSolid}</p>
               </div>
             </section>
 
@@ -257,6 +267,11 @@ function editor(locale) {
                   <span><strong>${T.blackPoint}</strong><em id="blackPointValue">0</em></span>
                   <input id="blackPoint" type="range" min="0" max="90" value="0">
                   <small class="range-note">${T.blackPointS}</small>
+                </label>
+                <label class="range-row" id="moireContrastRow" hidden>
+                  <span><strong>${T.moireContrast}</strong><em id="moireContrastValue">100%</em></span>
+                  <input id="moireContrast" type="range" min="10" max="100" value="100">
+                  <small class="range-note">${T.moireContrastS}</small>
                 </label>
 
                 <label class="toggle-row">

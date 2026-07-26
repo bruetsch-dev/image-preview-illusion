@@ -113,6 +113,7 @@
               <div class="module-body">
                 <div class="tabs" role="tablist">
                   <button class="tab is-active" id="modeHide" type="button" role="tab" aria-selected="true">Hide &amp; reveal</button>
+                  <button class="tab" id="modeSolid" type="button" role="tab" aria-selected="false">Solid Moiré</button>
                   <button class="tab" id="modeSwap" type="button" role="tab" aria-selected="false">Two-image swap</button>
                 </div>
                 <label class="drop-zone" for="sourceInput" id="sourceDrop">
@@ -128,6 +129,7 @@
                   <span class="drop-meta" id="secondMeta">The picture the tap uncovers.</span>
                 </label>
                 <p class="hint" id="modeHint">One picture hides in the timeline and comes back when someone taps and holds it.</p>
+                <p class="hint" id="modeSolidHint" hidden>The image hides as a solid gray block in the timeline using a pixel pattern, requiring no transparency.</p>
               </div>
             </section>
 
@@ -205,6 +207,11 @@
                   <span><strong>Deepen blacks</strong><em id="blackPointValue">0</em></span>
                   <input id="blackPoint" type="range" min="0" max="90" value="0">
                   <small class="range-note">Crushes shadows toward true black before the trick runs. This is what makes tones vanish on a dark-mode timeline.</small>
+                </label>
+                <label class="range-row" id="moireContrastRow" hidden>
+                  <span><strong>Moiré Pattern Contrast</strong><em id="moireContrastValue">100%</em></span>
+                  <input id="moireContrast" type="range" min="10" max="100" value="100">
+                  <small class="range-note">Low contrast makes the pattern look more natural to avoid AI detection, but harder to read.</small>
                 </label>
 
                 <label class="toggle-row">

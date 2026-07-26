@@ -113,6 +113,7 @@
               <div class="module-body">
                 <div class="tabs" role="tablist">
                   <button class="tab is-active" id="modeHide" type="button" role="tab" aria-selected="true">隠して見せる</button>
+                  <button class="tab" id="modeSolid" type="button" role="tab" aria-selected="false">ソリッドモアレ (Solid Moiré)</button>
                   <button class="tab" id="modeSwap" type="button" role="tab" aria-selected="false">2 枚入れ替え</button>
                 </div>
                 <label class="drop-zone" for="sourceInput" id="sourceDrop">
@@ -128,6 +129,7 @@
                   <span class="drop-meta" id="secondMeta">長押しで現れる画像です。</span>
                 </label>
                 <p class="hint" id="modeHint">1 枚の画像がタイムラインでは隠れ、長押しすると戻ります。</p>
+                <p class="hint" id="modeSolidHint" hidden>透明度を使わず、ピクセルパターンを用いてタイムライン上で画像を単色のグレーのブロックとして隠します。</p>
               </div>
             </section>
 
@@ -205,6 +207,11 @@
                   <span><strong>黒を締める</strong><em id="blackPointValue">0</em></span>
                   <input id="blackPoint" type="range" min="0" max="90" value="0">
                   <small class="range-note">トリックの前に暗部を黒に寄せます。ダークモードのタイムラインで効きます。</small>
+                </label>
+                <label class="range-row" id="moireContrastRow" hidden>
+                  <span><strong>モアレのコントラスト</strong><em id="moireContrastValue">100%</em></span>
+                  <input id="moireContrast" type="range" min="10" max="100" value="100">
+                  <small class="range-note">コントラストを下げると、パターンがより自然に見えAI検知を回避しやすくなりますが、読みづらくなります。</small>
                 </label>
 
                 <label class="toggle-row">

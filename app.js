@@ -23,8 +23,10 @@
     downloadButton: document.getElementById("downloadButton"),
 
     modeHide: document.getElementById("modeHide"),
+    modeSolid: document.getElementById("modeSolid"),
     modeSwap: document.getElementById("modeSwap"),
     modeHint: document.getElementById("modeHint"),
+    modeSolidHint: document.getElementById("modeSolidHint"),
 
     sourceInput: document.getElementById("sourceInput"),
     sourceDrop: document.getElementById("sourceDrop"),
@@ -38,6 +40,8 @@
     paintTools: document.getElementById("paintTools"),
     brushSize: document.getElementById("brushSize"),
     brushSizeValue: document.getElementById("brushSizeValue"),
+    moireContrast: document.getElementById("moireContrast"),
+    moireContrastValue: document.getElementById("moireContrastValue"),
     brushKeep: document.getElementById("brushKeep"),
     brushHide: document.getElementById("brushHide"),
     clearPaint: document.getElementById("clearPaint"),
@@ -133,6 +137,7 @@
     markAdds: true,
     timelineTheme: "light",
     brushSize: 64,
+    moireContrast: 100,
     brushValue: PAINT_KEEP,
 
     imageA: null,
@@ -608,6 +613,80 @@
     return { imageData: out, width: w, height: h, indexed: true, kind };
   }
 
+  function buildSolid(dims) {
+    const { w, h } = dims;
+    const source = imageToData(state.imageA, w, h, "#ffffff");
+    const src = source.data;
+    applyBlackPoint(src, state.blackPoint);
+    const out = new ImageData(w, h);
+    const dst = out.data;
+
+    const lum = meanLuma(src, w, h);
+    const masked = state.visibility === "paint" || state.visibility === "object";
+    const mask = masked ? ensurePaintMask(w, h) : null;
+    const threshold = state.threshold;
+    const speckles = state.visibility === "dark" ? speckleMask(lum, w, h, threshold) : null;
+    const boost = state.brightnessBoost ? 1.18 : 1;
+    const kind = new Uint8Array(w * h);
+    
+    // Moiré contrast (0.1 to 1.0)
+    const contrast = state.moireContrast / 100.0;
+
+    for (let y = 0; y < h; y += 1) {
+      // 2px horizontal scanlines
+      const isPatternRow = Math.floor(y / 2) % 2 !== 0;
+      for (let x = 0; x < w; x += 1) {
+        const p = y * w + x;
+        const i = p * 4;
+        const brush = mask ? mask[p] : 0;
+
+        let hidden =
+          brush !== PAINT_KEEP &&
+          (brush === PAINT_HIDE ||
+            state.visibility === "none" ||
+            masked ||
+            lum[p] >= threshold);
+
+        if (!hidden && brush === 0 && speckles) {
+          const g =
+            Math.min(speckles.gh - 1, (y / speckles.step) | 0) * speckles.gw +
+            Math.min(speckles.gw - 1, (x / speckles.step) | 0);
+          if (speckles.drop[g]) hidden = true;
+        }
+
+        dst[i + 3] = 255;
+        kind[p] = hidden ? 1 : 0;
+
+        if (!hidden) {
+          dst[i] = src[i];
+          dst[i + 1] = src[i + 1];
+          dst[i + 2] = src[i + 2];
+        } else {
+          let r = src[i];
+          let g = src[i + 1];
+          let b = src[i + 2];
+          if (boost > 1) {
+            r = Math.min(255, r * boost);
+            g = Math.min(255, g * boost);
+            b = Math.min(255, b * boost);
+          }
+
+          if (!isPatternRow) {
+            dst[i] = r;
+            dst[i + 1] = g;
+            dst[i + 2] = b;
+          } else {
+            dst[i] = r + (255 - 2 * r) * contrast;
+            dst[i + 1] = g + (255 - 2 * g) * contrast;
+            dst[i + 2] = b + (255 - 2 * b) * contrast;
+          }
+        }
+      }
+    }
+    state.analysis = { src, lum, w, h };
+    return { imageData: out, width: w, height: h, indexed: true, kind };
+  }
+
   /* ---------- build: two-image swap --------------------------------------
      Solving one pixel:
        over white  ->  c*a + 255*(1-a) = A
@@ -924,7 +1003,8 @@
     setCanvasSize(els.paintOverlayCanvas, w, h);
 
     const ctx = els.openedCanvas.getContext("2d");
-    ctx.imageSmoothingEnabled = scale < 1;
+    // Disable smoothing for solid mode so the preview shows the actual pattern instead of blurring it
+    ctx.imageSmoothingEnabled = state.mode === "solid" ? false : (scale < 1);
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, w, h);
     ctx.drawImage(dataToCanvas(output.imageData, output.width, output.height), 0, 0, w, h);
@@ -996,7 +1076,10 @@
     if (serial !== state.renderSerial) return;
 
     const dims = outputDimensions();
-    const output = state.mode === "swap" ? buildSwap(dims) : buildHideReveal(dims);
+    let output;
+    if (state.mode === "swap") output = buildSwap(dims);
+    else if (state.mode === "solid") output = buildSolid(dims);
+    else output = buildHideReveal(dims);
     state.output = output;
 
     drawOpened(output);
@@ -1180,16 +1263,26 @@
 
   function syncMode() {
     const swap = state.mode === "swap";
-    els.modeHide.classList.toggle("is-active", !swap);
+    const solid = state.mode === "solid";
+    const hide = state.mode === "hide";
+    els.modeHide.classList.toggle("is-active", hide);
+    els.modeSolid.classList.toggle("is-active", solid);
     els.modeSwap.classList.toggle("is-active", swap);
-    els.modeHide.setAttribute("aria-selected", String(!swap));
+    els.modeHide.setAttribute("aria-selected", String(hide));
+    els.modeSolid.setAttribute("aria-selected", String(solid));
     els.modeSwap.setAttribute("aria-selected", String(swap));
     els.secondDrop.hidden = !swap;
     els.visibilityModule.hidden = swap;
     els.sourceTitle.textContent = swap ? "Drop the timeline image" : "Drop an image";
-    els.modeHint.textContent = swap
-      ? "The first picture shows in the timeline, the second one takes over when the image is opened. Works best when the first is the lighter of the two."
-      : "One picture hides in the timeline and comes back when someone taps and holds it.";
+    els.modeHint.hidden = solid;
+    if (els.modeSolidHint) els.modeSolidHint.hidden = !solid;
+    const moireRow = document.getElementById("moireContrastRow");
+    if (moireRow) moireRow.hidden = !solid;
+    if (swap) {
+      els.modeHint.textContent = "The first picture shows in the timeline, the second one takes over when the image is opened. Works best when the first is the lighter of the two.";
+    } else if (hide) {
+      els.modeHint.textContent = "One picture hides in the timeline and comes back when someone taps and holds it.";
+    }
     const marking = state.visibility === "paint" || state.visibility === "object";
     document.body.classList.toggle("is-paint-mode", !swap && marking);
     document.body.classList.toggle("is-marking", !swap && state.visibility === "object");
@@ -1197,12 +1290,13 @@
 
   function syncVisibility() {
     const marking = state.visibility === "paint" || state.visibility === "object";
+    const swap = state.mode === "swap";
     els.paintTools.hidden = state.visibility !== "paint";
     els.objectTools.hidden = state.visibility !== "object";
     // The cutoff only applies when brightness decides what stays visible.
     els.thresholdRow.hidden = state.visibility !== "dark";
-    document.body.classList.toggle("is-paint-mode", state.mode === "hide" && marking);
-    document.body.classList.toggle("is-marking", state.mode === "hide" && state.visibility === "object");
+    document.body.classList.toggle("is-paint-mode", !swap && marking);
+    document.body.classList.toggle("is-marking", !swap && state.visibility === "object");
     els.brushKeep.setAttribute("aria-pressed", String(state.brushValue === PAINT_KEEP));
     els.brushHide.setAttribute("aria-pressed", String(state.brushValue === PAINT_HIDE));
   }
@@ -1221,6 +1315,12 @@
   function setupControls() {
     els.modeHide.addEventListener("click", () => {
       state.mode = "hide";
+      syncMode();
+      ready() ? scheduleRender() : drawIdle();
+    });
+
+    els.modeSolid.addEventListener("click", () => {
+      state.mode = "solid";
       syncMode();
       ready() ? scheduleRender() : drawIdle();
     });
@@ -1259,6 +1359,14 @@
       els.blackPointValue.textContent = String(state.blackPoint);
       scheduleRender();
     });
+
+    if (els.moireContrast) {
+      els.moireContrast.addEventListener("input", () => {
+        state.moireContrast = Number(els.moireContrast.value);
+        els.moireContrastValue.textContent = `${state.moireContrast}%`;
+        scheduleRender();
+      });
+    }
 
     const setTheme = (theme) => {
       state.timelineTheme = theme;
